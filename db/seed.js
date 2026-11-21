@@ -1,205 +1,111 @@
-// Datos de ejemplo. Todo lo de aquí es SINTÉTICO: cámbialo por tu información real
-// y ejecuta `npm run seed` (borra y vuelve a crear las tablas de contenido).
+// Datos iniciales del portfolio.
+// Los PROYECTOS, fechas y descripciones son EJEMPLOS: cámbialos por los tuyos
+// y ejecuta `npm run seed` (vuelve a crear perfil, proyectos, experiencia y habilidades).
+// Para la imagen de cada proyecto pon una URL (https://...) o una ruta como /img/proyectos/mi-captura.png.
 const { db, init } = require('./db');
 
 const profile = {
-  surname: 'Ortega Salinas',
-  given_name: 'Adrián',
-  born_year: 1997,
-  role: 'Desarrollador full-stack',
-  location: 'Lima, Perú',
+  surname: 'Gutiérrez Mamani',
+  given_name: 'Ronald',
+  born_year: null,
+  role: 'Estudiante de Informática · Desarrollo web',
+  location: 'La Paz, Bolivia',
   summary:
-    'Construyo productos web de punta a punta: interfaces que se sienten rápidas, APIs que no se caen y bases de datos que siguen ordenadas cuando el proyecto crece.',
-  note: 'Trabajo sobre todo con JavaScript en el navegador y en Node, SQL en serio y la menor cantidad de dependencias posible.',
+    'Estudio la Licenciatura en Informática en la Universidad Mayor de San Andrés (UMSA) y construyo aplicaciones web de punta a punta: interfaces, APIs y bases de datos.',
+  note: 'Me interesan el frontend con buena interacción, el backend en Node.js y modelar bien los datos. Busco prácticas, pasantías o proyectos freelance.',
   email: 'hola@ejemplo.dev',
-  github: 'https://github.com/',
-  linkedin: 'https://www.linkedin.com/',
+  github: 'https://github.com/Ronald0304',
+  linkedin: '',
   available: 1,
-  since_year: 2019,
+  since_year: 2022,
 };
 
 const projects = [
   {
-    slug: 'este-fichero',
-    accession: '2026.01',
-    call_number: '005.276 ORT',
-    title: 'Este fichero',
-    subtitle: 'el portfolio que estás usando',
-    year: 2026,
-    category: 'Web',
-    summary:
-      'Portfolio con API propia: los proyectos, «me gusta», comentarios y mensajes viven en SQLite y se administran desde un panel protegido.',
-    details:
-      'Express sirve la API y los archivos estáticos. Sin frameworks de frontend: HTML semántico, CSS con variables y JavaScript propio. Los «me gusta» se limitan a uno por visitante, por proyecto y por día.',
-    stack: 'Node.js, Express, SQLite, JavaScript, CSS',
-    url: '/',
-    repo: 'https://github.com/',
-    sort: 1,
+    code: 'PRT WBGL', slug: 'portfolio-webgl', title: 'Este portfolio', subtitle: 'galería WebGL con API propia', year: 2026, category: 'Web',
+    summary: 'El sitio que estás viendo: una galería curva en WebGL con lente de vidrio, conectada a una API en Express y una base SQLite.',
+    details: 'Shaders propios para la curva, el revelado por bloques y la refracción del borde. Panel de administración para editar los proyectos sin tocar código.',
+    stack: 'three.js, GLSL, JavaScript, Node.js, Express, SQLite', url: '/', repo: 'https://github.com/Ronald0304/aux-121',
   },
   {
-    slug: 'kardex',
-    accession: '2025.04',
-    call_number: '005.74 KAR',
-    title: 'Kardex',
-    subtitle: 'inventario para ferreterías de barrio',
-    year: 2025,
-    category: 'Datos',
-    summary:
-      'Control de stock con lector de códigos de barras desde el celular, alertas de reposición y reportes de rotación por producto.',
-    details:
-      'Modelo de movimientos en vez de saldos para auditar cada unidad. Consultas de rotación con ventanas SQL; la vista de caja funciona sin conexión y sincroniza al volver.',
-    stack: 'PostgreSQL, Node.js, Fastify, Vue, PWA',
-    url: '',
-    repo: '',
-    sort: 2,
+    code: 'SIS INS', slug: 'sistema-inscripciones', title: 'Sistema de inscripciones', subtitle: 'proyecto de materia (ejemplo)', year: 2025, category: 'Web',
+    summary: 'Inscripción a materias con control de cupos, prerrequisitos y horarios que no se cruzan.',
+    details: 'Modelo relacional normalizado, validaciones en el servidor y reportes en PDF por estudiante.',
+    stack: 'PHP, MySQL, Bootstrap',
   },
   {
-    slug: 'ruta-34',
-    accession: '2025.02',
-    call_number: '004.6 RUT',
-    title: 'Ruta 34',
-    subtitle: 'buses en tiempo real',
-    year: 2025,
-    category: 'Tiempo real',
-    summary:
-      'Mapa con la posición de cada bus de una ruta urbana y tiempo estimado de llegada a cada paradero.',
-    details:
-      'Los GPS publican cada 5 s; un servicio en Node agrega posiciones en Redis y las emite por WebSocket. El ETA se calcula con la mediana de los últimos recorridos por tramo.',
-    stack: 'Node.js, WebSocket, Redis, Leaflet',
-    url: '',
-    repo: '',
-    sort: 3,
+    code: 'TLF RTS', slug: 'rutas-teleferico', title: 'Rutas en teleférico', subtitle: 'planificador de viajes (ejemplo)', year: 2025, category: 'Mapas',
+    summary: 'Calcula la mejor combinación de líneas de teleférico entre dos puntos de La Paz y El Alto.',
+    details: 'Grafo de estaciones con Dijkstra; el mapa se dibuja con Leaflet y la ruta se anima tramo a tramo.',
+    stack: 'JavaScript, Leaflet, Algoritmos de grafos',
   },
   {
-    slug: 'factura-ya',
-    accession: '2024.07',
-    call_number: '005.1 FAC',
-    title: 'Factura Ya',
-    subtitle: 'API de facturación electrónica',
-    year: 2024,
-    category: 'API',
-    summary:
-      'API REST para emitir boletas y facturas: valida, firma, genera el PDF y guarda la constancia de envío.',
-    details:
-      'Colas de reintento con backoff para el servicio tributario, idempotencia por clave de cliente y documentación OpenAPI generada desde los esquemas de validación.',
-    stack: 'Express, SQLite, Zod, OpenAPI, Docker',
-    url: '',
-    repo: '',
-    sort: 4,
+    code: 'CHT RT', slug: 'chat-tiempo-real', title: 'Chat en tiempo real', subtitle: 'salas y mensajes (ejemplo)', year: 2025, category: 'Tiempo real',
+    summary: 'Chat con salas, usuarios conectados y aviso de "está escribiendo".',
+    details: 'WebSockets con Socket.IO, mensajes guardados en SQLite y autenticación por sesión.',
+    stack: 'Node.js, Socket.IO, SQLite',
   },
   {
-    slug: 'cuaderno',
-    accession: '2024.03',
-    call_number: '005.43 CUA',
-    title: 'Cuaderno',
-    subtitle: 'notas colaborativas sin conexión',
-    year: 2024,
-    category: 'Web',
-    summary:
-      'Editor de notas que funciona offline y fusiona cambios de varias personas sin conflictos cuando vuelve la red.',
-    details:
-      'CRDT para el texto, IndexedDB como almacén local y un Service Worker que hace de puente. El servidor solo reenvía operaciones.',
-    stack: 'TypeScript, CRDT, IndexedDB, Service Worker',
-    url: '',
-    repo: '',
-    sort: 5,
+    code: 'API NTS', slug: 'api-notas', title: 'API de notas', subtitle: 'REST con autenticación (ejemplo)', year: 2024, category: 'API',
+    summary: 'API REST para registrar notas y calcular promedios por gestión.',
+    details: 'Rutas documentadas con OpenAPI, tokens JWT y pruebas automáticas de los endpoints.',
+    stack: 'Express, JWT, PostgreSQL, Jest',
   },
   {
-    slug: 'huerto',
-    accession: '2023.09',
-    call_number: '629.8 HUE',
-    title: 'Huerto',
-    subtitle: 'riego automático con sensores',
-    year: 2023,
-    category: 'Herramientas',
-    summary:
-      'Panel para un huerto comunitario: humedad del suelo, programación de riego y alertas cuando un sensor deja de reportar.',
-    details:
-      'Sensores ESP32 publican por MQTT; un worker en Python guarda series de tiempo y el panel las dibuja en el navegador.',
-    stack: 'Python, MQTT, ESP32, SQLite, Chart.js',
-    url: '',
-    repo: '',
-    sort: 6,
+    code: 'GRF ALG', slug: 'visualizador-algoritmos', title: 'Visualizador de algoritmos', subtitle: 'estructuras de datos (ejemplo)', year: 2024, category: 'Educativo',
+    summary: 'Muestra paso a paso BFS, DFS, Dijkstra y algoritmos de ordenamiento.',
+    details: 'Canvas 2D con controles de velocidad y pausa para estudiar cada iteración.',
+    stack: 'JavaScript, Canvas, HTML, CSS',
   },
-];
+  {
+    code: 'CLM LPZ', slug: 'clima-la-paz', title: 'Clima La Paz', subtitle: 'tablero con API pública (ejemplo)', year: 2024, category: 'Datos',
+    summary: 'Tablero del clima con pronóstico por horas y gráficos de temperatura y lluvia.',
+    details: 'Consumo de una API pública con caché en el navegador y gráficos con Chart.js.',
+    stack: 'JavaScript, Fetch API, Chart.js',
+  },
+  {
+    code: 'TND BRR', slug: 'tienda-barrio', title: 'Tienda de barrio', subtitle: 'catálogo y pedidos (ejemplo)', year: 2024, category: 'Web',
+    summary: 'Catálogo con carrito y pedidos por WhatsApp para un negocio pequeño.',
+    details: 'Sitio estático rápido con panel sencillo para actualizar precios.',
+    stack: 'HTML, CSS, JavaScript, Netlify',
+  },
+  {
+    code: 'AGD MED', slug: 'agenda-citas', title: 'Agenda de citas', subtitle: 'consultorio médico (ejemplo)', year: 2023, category: 'Web',
+    summary: 'Reserva de citas con horarios disponibles y recordatorios.',
+    details: 'Calendario propio, roles de recepción y médico, y base de datos relacional.',
+    stack: 'Laravel, MySQL, JavaScript',
+  },
+  {
+    code: 'BIB UMSA', slug: 'catalogo-biblioteca', title: 'Catálogo de biblioteca', subtitle: 'búsqueda y préstamos (ejemplo)', year: 2023, category: 'Datos',
+    summary: 'Búsqueda de libros por autor, materia y título, con control de préstamos.',
+    details: 'Búsqueda de texto completo en SQLite (FTS5) y paginación en el servidor.',
+    stack: 'Python, Flask, SQLite',
+  },
+].map((p, i) => ({
+  accession: `${p.year}.${String(i + 1).padStart(2, '0')}`,
+  call_number: p.code,
+  url: '',
+  repo: '',
+  image: '',
+  sort: i + 1,
+  ...p,
+}));
 
 const experience = [
-  {
-    org: 'Estudio independiente',
-    role: 'Desarrollador full-stack freelance',
-    start_date: '2024-02',
-    end_date: null,
-    description:
-      'Productos a medida para pymes: diseño de la base de datos, API y frontend, despliegue y mantenimiento.',
-    sort: 1,
-  },
-  {
-    org: 'Empresa de logística (ejemplo)',
-    role: 'Desarrollador backend',
-    start_date: '2021-06',
-    end_date: '2024-01',
-    description:
-      'Servicios de rastreo de envíos en Node y PostgreSQL. Bajé el tiempo de respuesta del endpoint principal de 900 ms a 120 ms rediseñando índices.',
-    sort: 2,
-  },
-  {
-    org: 'Agencia digital (ejemplo)',
-    role: 'Desarrollador frontend',
-    start_date: '2019-08',
-    end_date: '2021-05',
-    description:
-      'Sitios y tiendas para clientes de retail. Primer contacto con accesibilidad y rendimiento en serio.',
-    sort: 3,
-  },
+  { org: 'Universidad Mayor de San Andrés (UMSA)', role: 'Licenciatura en Informática', start_date: '2022-03', end_date: null,
+    description: 'Carrera de Informática, Facultad de Ciencias Puras y Naturales. Énfasis en desarrollo web, bases de datos y algoritmos.', sort: 1 },
+  { org: 'Proyectos académicos y personales', role: 'Desarrollo web full-stack', start_date: '2023-01', end_date: null,
+    description: 'Aplicaciones con frontend en JavaScript, APIs en Node.js y bases de datos SQL. (Edita este texto con tu experiencia real.)', sort: 2 },
 ];
 
 const skills = [
-  {
-    heading: 'Desarrollo web',
-    subheading: 'Interfaces',
-    level: 92,
-    items: 'HTML semántico, CSS moderno, JavaScript, TypeScript, Vue, React, accesibilidad',
-    see_also: 'Rendimiento',
-    sort: 1,
-  },
-  {
-    heading: 'Desarrollo web',
-    subheading: 'Servidor',
-    level: 88,
-    items: 'Node.js, Express, Fastify, REST, WebSocket, autenticación, colas de trabajo',
-    see_also: 'Bases de datos',
-    sort: 2,
-  },
-  {
-    heading: 'Bases de datos',
-    subheading: 'Relacionales',
-    level: 84,
-    items: 'PostgreSQL, SQLite, modelado, índices, migraciones, consultas con ventanas',
-    see_also: 'Servidor',
-    sort: 3,
-  },
-  {
-    heading: 'Rendimiento',
-    subheading: 'Medición',
-    level: 72,
-    items: 'Lighthouse, perfiles de CPU, caché HTTP, carga diferida',
-    see_also: 'Interfaces',
-    sort: 4,
-  },
-  {
-    heading: 'Infraestructura',
-    subheading: 'Despliegue',
-    level: 66,
-    items: 'Docker, Linux, Nginx, CI con GitHub Actions, copias de seguridad',
-    see_also: null,
-    sort: 5,
-  },
+  { heading: 'Frontend', subheading: 'Interfaces', level: 85, items: 'HTML, CSS, JavaScript, three.js, WebGL, responsive', see_also: null, sort: 1 },
+  { heading: 'Backend', subheading: 'Servidor', level: 78, items: 'Node.js, Express, PHP, APIs REST', see_also: null, sort: 2 },
+  { heading: 'Datos', subheading: 'Bases de datos', level: 75, items: 'SQL, SQLite, MySQL, PostgreSQL', see_also: null, sort: 3 },
+  { heading: 'Herramientas', subheading: 'Flujo de trabajo', level: 72, items: 'Git, GitHub, Linux, VS Code', see_also: null, sort: 4 },
 ];
 
-const guestbook = [
-  { name: 'Lucía P.', note: 'El banner de Ruta 34 está buenísimo. Muy buena idea.' },
-  { name: 'Marco', note: 'Pasé por Ruta 34. ¿Tienen la ruta 73 también?' },
-];
+const guestbook = [];
 
 function seed() {
   init();
@@ -207,8 +113,8 @@ function seed() {
     db.exec('DELETE FROM stamps; DELETE FROM projects; DELETE FROM experience; DELETE FROM skills; DELETE FROM guestbook; DELETE FROM profile;');
     db.prepare(`INSERT INTO profile (id, surname, given_name, born_year, role, location, summary, note, email, github, linkedin, available, since_year)
       VALUES (1, @surname, @given_name, @born_year, @role, @location, @summary, @note, @email, @github, @linkedin, @available, @since_year)`).run(profile);
-    const p = db.prepare(`INSERT INTO projects (slug, accession, call_number, title, subtitle, year, category, summary, details, stack, url, repo, sort)
-      VALUES (@slug, @accession, @call_number, @title, @subtitle, @year, @category, @summary, @details, @stack, @url, @repo, @sort)`);
+    const p = db.prepare(`INSERT INTO projects (slug, accession, call_number, title, subtitle, year, category, summary, details, stack, url, repo, sort, code, image)
+      VALUES (@slug, @accession, @call_number, @title, @subtitle, @year, @category, @summary, @details, @stack, @url, @repo, @sort, @code, @image)`);
     projects.forEach((r) => p.run(r));
     const e = db.prepare(`INSERT INTO experience (org, role, start_date, end_date, description, sort)
       VALUES (@org, @role, @start_date, @end_date, @description, @sort)`);
@@ -224,7 +130,7 @@ function seed() {
 
 if (require.main === module) {
   seed();
-  console.log('Base de datos sembrada con datos de ejemplo.');
+  console.log('Base de datos sembrada con los datos iniciales.');
 }
 
-module.exports = { seed };
+module.exports = { seed, profile, projects, experience, skills };

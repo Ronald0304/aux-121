@@ -7,18 +7,18 @@ related_targets: []
 
 # Surface: Portfolio home (public/index.html)
 
-Mode: Experience. Audience: recruiters, tech leads and clients evaluating a full-stack developer. Pinned by the user: "muy llamativo, tipo anime, como el de Crunchyroll". Interpreted as the anime-streaming genre, never that platform's logo, name or art.
+Mode: Experience. Owner: Ronald Gutiérrez Mamani, informatics student at UMSA (La Paz), web development. Brief pinned by the user: the motionsites.ai "experiments-gallery" prompt (WebGL curved gallery, glass rim, RGB edge lights), translated to Spanish and to a student portfolio.
 
 ## Direction contract
 
-THESIS: The portfolio is an anime streaming catalogue: projects are series with key art, ranked and filterable. It replaces the earlier card-catalogue world, which the user rejected.
+THESIS: Projects as a scroll-driven curved strip seen through a glass slab. It replaces the anime-streaming world.
 
-OWN-WORLD: Night-indigo ground, full-bleed procedural key art (gradient sky, striped sun, speed lines, skyline, halftone, katakana), hot pink + sun yellow, Dela Gothic One headlines, pill buttons, manga-panel offset shadows.
+OWN-WORLD: Near-black #0f0e14; JetBrains Mono only; procedural canvas posters; rim refraction with RGB dispersion and drifting R/G/B edge light; a 3D cross.
 
-STORY: The visitor sees the developer as this season's premiere, browses the top and the catalogue, opens a project's detail, likes it, reads the character sheet and seasons, comments, then writes.
+STORY: The visitor scrolls through the projects, the title settles on the centre code, they open the detail, read "Sobre mí" and write through "Hablemos".
 
-FIRST VIEWPORT: Full-bleed hero carousel; title, badges, synopsis and Play/Contrátame on the left; thumbnail posters with progress bars at the bottom right.
+FIRST VIEWPORT: Smile strip at 21.7–65.9% H, title at 29%/85.7%, rule at 57.1%/89.7%, cross at 50%/76%, nav and footer per the brief.
 
-FORM: Brief-pinned direction (anime streaming). seed:8bea1aecba0d1c0e (earlier roll, superseded by the user's pin).
+FORM: Brief-pinned (no roll). seed: none (unavailable)
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

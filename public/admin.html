@@ -57,12 +57,12 @@
 
       <div class="sheet" role="tabpanel" id="p-pr" aria-labelledby="t-pr" data-pane="pr" hidden>
         <div class="sheet__bar">
-          <p>Los proyectos aparecen en el portfolio en el orden indicado. Los 4 primeros salen en el carrusel.</p>
+          <p>Los proyectos aparecen en el portfolio en el orden indicado. Sin imagen, el portfolio genera un póster automáticamente.</p>
           <button class="btn btn--pink" type="button" data-new>Nuevo proyecto</button>
         </div>
         <div class="scroll">
           <table class="table">
-            <thead><tr><th scope="col">Orden</th><th scope="col">Nº</th><th scope="col">Título</th><th scope="col">Género</th><th scope="col" class="num">Me gusta</th><th scope="col"><span class="visually-hidden">Acciones</span></th></tr></thead>
+            <thead><tr><th scope="col">Orden</th><th scope="col">Nº</th><th scope="col">Título</th><th scope="col">Categoría</th><th scope="col" class="num">Me gusta</th><th scope="col"><span class="visually-hidden">Acciones</span></th></tr></thead>
             <tbody data-projects></tbody>
           </table>
         </div>
@@ -75,15 +75,17 @@
           <input type="hidden" name="id">
           <div class="editor__grid">
             <label class="field"><span class="field__label">Título *</span><input name="title" maxlength="80" required></label>
+            <label class="field"><span class="field__label">Código de la tarjeta</span><input name="code" maxlength="10" placeholder="SIS INS (se genera si lo dejas vacío)"></label>
             <label class="field"><span class="field__label">Subtítulo</span><input name="subtitle" maxlength="100"></label>
             <label class="field"><span class="field__label">Identificador</span><input name="slug" maxlength="60" placeholder="se genera del título"></label>
-            <label class="field"><span class="field__label">Género</span><input name="category" maxlength="24" placeholder="Web, API, Datos…" list="cats"></label>
-            <label class="field"><span class="field__label">Nº de episodio</span><input name="accession" maxlength="12" placeholder="2026.02"></label>
+            <label class="field"><span class="field__label">Categoría</span><input name="category" maxlength="24" placeholder="Web, API, Datos…" list="cats"></label>
+            <label class="field"><span class="field__label">Nº de registro</span><input name="accession" maxlength="12" placeholder="2026.02"></label>
             <label class="field"><span class="field__label">Código interno</span><input name="call_number" maxlength="24" placeholder="005.1 ABC"></label>
             <label class="field"><span class="field__label">Año</span><input name="year" type="number" min="1990" max="2100"></label>
             <label class="field"><span class="field__label">Orden</span><input name="sort" type="number"></label>
             <label class="field"><span class="field__label">Demo (URL)</span><input name="url" placeholder="https://…"></label>
             <label class="field"><span class="field__label">Código (URL)</span><input name="repo" placeholder="https://github.com/…"></label>
+            <label class="field"><span class="field__label">Imagen (captura)</span><input name="image" placeholder="/img/proyectos/mi-proyecto.png o https://…"></label>
           </div>
           <label class="field"><span class="field__label">Resumen *</span><textarea name="summary" rows="3" maxlength="400" required></textarea></label>
           <label class="field"><span class="field__label">Detalles técnicos</span><textarea name="details" rows="4" maxlength="1200"></textarea></label>

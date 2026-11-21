@@ -215,7 +215,7 @@ admin.delete('/guestbook/:id', (req, res) => {
   res.json({ ok: true });
 });
 
-const PROJECT_FIELDS = ['slug', 'accession', 'call_number', 'title', 'subtitle', 'year', 'category', 'summary', 'details', 'stack', 'url', 'repo', 'sort'];
+const PROJECT_FIELDS = ['slug', 'accession', 'call_number', 'title', 'subtitle', 'year', 'category', 'summary', 'details', 'stack', 'url', 'repo', 'sort', 'code', 'image'];
 function projectInput(body) {
   const p = {};
   for (const f of PROJECT_FIELDS) p[f] = body?.[f];
@@ -231,12 +231,16 @@ function projectInput(body) {
   p.stack = clean(p.stack, 200);
   p.url = clean(p.url, 300);
   p.repo = clean(p.repo, 300);
+  p.image = clean(p.image, 400);
+  const STOP = new Set(['DE', 'DEL', 'LA', 'EL', 'LOS', 'LAS', 'Y', 'EN', 'CON', 'PARA', 'UN', 'UNA', 'POR']);
+  const shortWord = (w) => { const c = w[0] + w.slice(1).replace(/[AEIOU]/g, ''); return (c.length >= 3 ? c : w).slice(0, 4); };
+  p.code = clean(p.code, 10).toUpperCase() || p.title.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().replace(/[^A-Z0-9 ]/g, '').split(/\s+/).filter((w) => w && !STOP.has(w)).slice(0, 2).map(shortWord).join(' ').slice(0, 10);
   p.sort = Number(p.sort) || 0;
   const errors = {};
   if (!p.title) errors.title = 'El título es obligatorio.';
   if (!p.slug) errors.slug = 'No se pudo generar el identificador.';
   if (p.summary.length < 10) errors.summary = 'El resumen necesita al menos 10 caracteres.';
-  for (const k of ['url', 'repo']) if (p[k] && !/^(https?:\/\/|\/)/.test(p[k])) errors[k] = 'Debe empezar por https:// o /';
+  for (const k of ['url', 'repo', 'image']) if (p[k] && !/^(https?:\/\/|\/)/.test(p[k])) errors[k] = 'Debe empezar por https:// o /';
   return { p, errors };
 }
 

@@ -30,6 +30,8 @@ CREATE TABLE IF NOT EXISTS projects (
   stack        TEXT NOT NULL DEFAULT '',
   url          TEXT,
   repo         TEXT,
+  code         TEXT NOT NULL DEFAULT '',
+  image        TEXT NOT NULL DEFAULT '',
   sort         INTEGER NOT NULL DEFAULT 0,
   created_at   TEXT NOT NULL DEFAULT (datetime('now'))
 );

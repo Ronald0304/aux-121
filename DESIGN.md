@@ -1,128 +1,66 @@
 ---
-name: Portfolio Anime
-description: Portfolio full-stack con estética de plataforma de anime, llamativo y lleno de color.
+name: Portafolio WebGL · Ronald Gutiérrez Mamani
+description: Galería WebGL curva con lente de vidrio, dispersión RGB y luces de borde, en una sola pantalla.
 colors:
-  night: "#0e0a1f"
-  night-2: "#17112f"
-  panel: "#221a45"
-  panel-2: "#2d2358"
-  line: "#3b3070"
-  text: "#f7f3ff"
-  muted: "#b9addc"
-  pink: "#ff3d8b"
-  pink-2: "#ff6aa8"
-  pink-deep: "#d6176a"
-  sun: "#ffcc29"
-  sky: "#23d5e6"
-  violet: "#7a5cff"
-  mint: "#3ee8b5"
+  base: "#0f0e14"
+  txt: "#e7e4ee"
+  mute: "rgba(231,228,238,.56)"
+  label: "rgba(231,228,238,.62)"
+  block: "#0b0b0f"
 typography:
   display:
-    fontFamily: "Dela Gothic One, Zen Kaku, system-ui, sans-serif"
-    fontSize: "clamp(2.6rem, 7vw, 5.6rem)"
+    fontFamily: "JetBrains Mono, monospace"
+    fontSize: "4.5vw"
     fontWeight: 400
-    lineHeight: 0.98
-  headline:
-    fontFamily: "Dela Gothic One, Zen Kaku, system-ui, sans-serif"
-    fontSize: "clamp(1.9rem, 4.4vw, 3.2rem)"
+    letterSpacing: ".02em"
+  ui:
+    fontFamily: "JetBrains Mono, monospace"
+    fontSize: "max(9px, .74vw)"
     fontWeight: 400
-    lineHeight: 1.04
-  body:
-    fontFamily: "Zen Kaku, system-ui, sans-serif"
-    fontSize: "1rem"
-    fontWeight: 500
-    lineHeight: 1.6
-  label:
-    fontFamily: "Zen Kaku, system-ui, sans-serif"
-    fontSize: "0.8rem"
-    fontWeight: 900
-    letterSpacing: "0.06em"
+    letterSpacing: ".04em"
 rounded:
-  badge: "6px"
-  field: "12px"
-  poster: "14px"
-  panel: "24px"
-  pill: "999px"
+  card: "4.8% of card width"
+  media: ".6vw"
 spacing:
-  gutter: "clamp(16px, 4vw, 56px)"
-  section: "clamp(56px, 8vw, 96px)"
-components:
-  button-primary:
-    backgroundColor: "{colors.pink-deep}"
-    textColor: "{colors.text}"
-    rounded: "{rounded.pill}"
-    padding: "12px 22px"
-    height: "46px"
-  button-sun:
-    backgroundColor: "{colors.sun}"
-    textColor: "{colors.night}"
-    rounded: "{rounded.pill}"
-    padding: "12px 22px"
-  button-ghost:
-    backgroundColor: "rgb(255 255 255 / 0.12)"
-    textColor: "{colors.text}"
-    rounded: "{rounded.pill}"
-  chip-active:
-    backgroundColor: "{colors.sun}"
-    textColor: "{colors.night}"
-    rounded: "{rounded.pill}"
-  field:
-    backgroundColor: "{colors.night}"
-    textColor: "{colors.text}"
-    rounded: "{rounded.field}"
-    height: "48px"
+  card-width: ".174 × viewport width"
+  pitch: ".1786 × viewport width"
 ---
 
-# Design System: Portfolio Anime
+# Design System: Portafolio WebGL
 
 ## Overview
 
-**Creative North Star: "Estreno de temporada"**
+**Creative North Star: "Laboratorio bajo vidrio"**
 
-The portfolio reads like an anime streaming catalogue: a hero carousel of featured "series" (projects) with full-bleed key art, a ranked "Top de la semana" row with giant outlined numbers, a filterable catalogue of 2:3 posters, a character sheet with stat bars, experience as numbered seasons, comments and an "¿Siguiente episodio?" contact banner. The look is its own, not a copy of any platform: no third-party logos, names or art.
+One fixed full-screen canvas. The projects sit in a strip of poster cards bent into a "smile" (tallest at the centre, stepping shorter outward). The whole frame is seen through a rounded glass slab: the edges refract and split RGB, and three independent red, green and blue light patches drift around the rim and mix into pastel mint, cyan, blue, lavender and pink. Everything else is quiet monospace UI on a near-black field. Motion is scroll-driven only, with eased inertia. Only the edge lights and the 3D cross move on their own.
 
-All key art is procedural SVG (`public/js/art.js`): a gradient sky, a retro striped sun, speed lines, sparkles, a city / mountain / wave silhouette, halftone dots and a katakana watermark. Each project gets a stable palette and composition from its slug, so new projects get new art automatically.
-
-**Key Characteristics:**
-- Deep night-indigo ground; colour arrives in full-bleed key art, not as scattered accents.
-- Hot pink + sun yellow as the two brand voices; sky, violet and mint for supporting roles.
-- Dela Gothic One for every headline; Zen Kaku Gothic New for body and UI.
-- Manga-panel accents: hard offset shadows on the brand mark, the contact form and the pitch box (intentional, part of the world).
+Built from the brief at motionsites.ai ("experiments-gallery"), translated to Spanish and to a UMSA informatics student's portfolio. The reference's image and video assets were replaced by:
+- posters generated on a 2D canvas per project (glitch, metaball, dither, pixel sigil, wireframe planet, halftone);
+- a three.js 3D cross.
 
 ## Colors
 
-- **Night** (#0e0a1f): page ground. **Night-2** (#17112f) and **Panel** (#221a45 / #2d2358): raised surfaces, chips, bubbles.
-- **Pink** (#ff3d8b): accents, outlines, rank numbers, focus of attention. **Pink-deep** (#d6176a): any fill that carries white text (buttons, badges), for 4.6:1 contrast.
-- **Sun** (#ffcc29): secondary CTA ("Contrátame"), active filters, stat numbers, the contact section ground.
-- **Sky** (#23d5e6), **Violet** (#7a5cff), **Mint** (#3ee8b5): organisation names, stat fills, the "Disponible" status.
-- **Text** (#f7f3ff) and **Muted** (#b9addc) on night surfaces.
-
-**The White-on-Pink Rule.** White text never sits on #ff3d8b; use pink-deep.
+- **Base** #0f0e14 for the page. The WebGL background lerps `uBase` between the palette presets NEGRO, ROJO, VERDE (default), AMARILLO and AZUL.
+- **Txt** #e7e4ee for all UI. **Mute** at 56% for secondary text; card labels at 62%.
+- Colour otherwise lives only in the project posters and the rim light.
 
 ## Typography
 
-- **Display** Dela Gothic One, 400, clamp(2.6rem, 7vw, 5.6rem), line-height 0.98: hero titles.
-- **Headline** Dela Gothic One, clamp(1.9rem, 4.4vw, 3.2rem): section titles, underlined by a pink/sun bar.
-- **Body** Zen Kaku Gothic New 500, 1rem/1.6. **Label** Zen Kaku 900, 0.8rem, uppercase, +0.06em.
-- A kana subset of Dela Gothic One (`dela-gothic-one-kana.woff2`, U+3000–30FF) covers the decorative katakana and hiragana.
+JetBrains Mono 400/500 everywhere. UI text is uppercase at max(9px, .74vw), +.04em. The title is 4.5vw (10vw on mobile), `white-space: pre`.
 
-## Elevation & motion
+## Motion
 
-- Posters lift 8px and tilt −1° on hover, with a pink ring and a dark drop shadow (no coloured glows).
-- Hero slides change with a diagonal wipe (clip-path, 900ms, ease-out) while the art slowly zooms out; autoplay every 7s with a progress bar on the active thumbnail; it pauses on hover, on focus and when the tab is hidden.
-- Stat bars fill on scroll. Liking a project pops the heart icon with a spring.
-- `prefers-reduced-motion` disables all of it.
+- `pos += (target - pos)·(1 - .88^(dt·30))`.
+- Block reveal 5×7 over 750 ms when a card enters the view.
+- The title scrambles every 3rd frame while moving.
+- The grid morph uses `1 - .88^(dt·60)`.
+- Overlays open with `clip-path: inset(50% 0)` → `inset(0)` over .7s `cubic-bezier(.77,0,.18,1)`.
+- Link underlines scale over .45s `cubic-bezier(.16,1,.3,1)`.
 
 ## Components
 
-- **Poster** 2:3, radius 14px, key art + title + year/genre, likes badge top right, synopsis overlay on hover.
-- **Badge** radius 6px, 900 weight: yellow, pink-deep, or outlined.
-- **Buttons** pill, 46px: pink-deep (primary), sun (secondary), ghost (outline over art).
-- **Field** night fill, 2px line border, radius 12px, pink focus ring.
-- **Detail dialog** native `<dialog>` with a 16:7 key-art banner and a pink 3px frame.
-
-## Do's and Don'ts
-
-- Do give every new project a slug; that is what seeds its art.
-- Don't use a real platform's logo, name or artwork, or any anime character art you do not own.
-- Don't add coloured glow shadows; depth comes from dark shadows and the pink ring.
+- **Card:** rounded-SDF quad with 48 segments, block-reveal glitch, +8% brightness and 1.5% scale on hover.
+- **Label:** tilted to the card's top edge.
+- **Overlay:** two columns, one on mobile.
+- **Toast:** centred, 1.8 s.
+- **Palette list:** active item gets a "▪ " prefix.

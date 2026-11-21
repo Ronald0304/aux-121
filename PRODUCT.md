@@ -12,6 +12,7 @@ Frontend en HTML, CSS y JavaScript sin framework. Backend Node.js + Express con 
 
 ## Users
 
+Dueño: Ronald Gutiérrez Mamani, estudiante de la Licenciatura en Informática (UMSA, La Paz, Bolivia), enfocado en desarrollo web.
 - Reclutadores, líderes técnicos y clientes potenciales que evalúan a un desarrollador full-stack en pocos minutos, normalmente desde un enlace en un CV, LinkedIn o un correo.
 - El propio dueño del portfolio, que mantiene el contenido desde un panel admin.
 
@@ -33,7 +34,7 @@ El propio portfolio es una pieza full-stack funcionando: front, API y base de da
 
 ## Brand Commitments
 
-El usuario pidió un frontend "muy llamativo, tipo anime, como el de Crunchyroll": estética de plataforma de streaming de anime, sin usar el logo, el nombre ni el arte de terceros.
+Diseño fijado por el usuario: el prompt "experiments-gallery" de motionsites.ai (galería WebGL curva, lente de vidrio, luces RGB en el borde), todo en español. Sin usar los recursos de imagen y video de terceros del prompt original.
 
 ## Evidence on Hand
 
