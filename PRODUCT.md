@@ -27,9 +27,13 @@ El propio portfolio es una pieza full-stack funcionando: front, API y base de da
 
 - Proyectos, experiencia y skills servidos por API desde SQLite.
 - Formulario de contacto que guarda en SQLite.
-- Libro de visitas y "aplausos" por proyecto.
+- Comentarios (libro de visitas) y "me gusta" por proyecto.
 - Panel admin protegido con contraseña: ver mensajes, moderar el libro, crear/editar/borrar proyectos.
 - Nombre real, foto y proyectos reales del dueño: **sin decidir**. El contenido inicial es de ejemplo (sintético) y se reemplaza desde el seed o el admin.
+
+## Brand Commitments
+
+El usuario pidió un frontend "muy llamativo, tipo anime, como el de Crunchyroll": estética de plataforma de streaming de anime, sin usar el logo, el nombre ni el arte de terceros.
 
 ## Evidence on Hand
 

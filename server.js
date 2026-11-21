@@ -111,7 +111,7 @@ app.get('/api/projects', (req, res) => {
 app.post('/api/projects/:id/stamp', rateLimit(30, 60_000), (req, res) => {
   const id = Number(req.params.id);
   const project = db.prepare('SELECT id FROM projects WHERE id = ?').get(id);
-  if (!project) return res.status(404).json({ error: 'Esa ficha no existe.' });
+  if (!project) return res.status(404).json({ error: 'Ese proyecto no existe.' });
   const v = visitorId(req);
   const info = db.prepare('INSERT OR IGNORE INTO stamps (project_id, visitor) VALUES (?, ?)').run(id, v);
   const p = projectsQuery.all().find((r) => r.id === id);
@@ -247,7 +247,7 @@ admin.post('/projects', (req, res) => {
     const info = db.prepare(`INSERT INTO projects (${PROJECT_FIELDS.join(',')}) VALUES (${PROJECT_FIELDS.map((f) => '@' + f).join(',')})`).run(p);
     res.status(201).json({ id: info.lastInsertRowid });
   } catch (e) {
-    if (String(e.message).includes('UNIQUE')) return res.status(409).json({ error: 'Ya hay una ficha con ese identificador.', errors: { slug: 'Ya existe.' } });
+    if (String(e.message).includes('UNIQUE')) return res.status(409).json({ error: 'Ya hay un proyecto con ese identificador.', errors: { slug: 'Ya existe.' } });
     throw e;
   }
 });
@@ -257,10 +257,10 @@ admin.put('/projects/:id', (req, res) => {
   if (Object.keys(errors).length) return res.status(400).json({ error: 'Revisa los campos marcados.', errors });
   try {
     const info = db.prepare(`UPDATE projects SET ${PROJECT_FIELDS.map((f) => `${f} = @${f}`).join(', ')} WHERE id = @id`).run({ ...p, id: Number(req.params.id) });
-    if (!info.changes) return res.status(404).json({ error: 'Esa ficha ya no existe.' });
+    if (!info.changes) return res.status(404).json({ error: 'Ese proyecto ya no existe.' });
     res.json({ ok: true });
   } catch (e) {
-    if (String(e.message).includes('UNIQUE')) return res.status(409).json({ error: 'Ya hay una ficha con ese identificador.', errors: { slug: 'Ya existe.' } });
+    if (String(e.message).includes('UNIQUE')) return res.status(409).json({ error: 'Ya hay un proyecto con ese identificador.', errors: { slug: 'Ya existe.' } });
     throw e;
   }
 });
@@ -285,4 +285,4 @@ app.use((err, req, res, next) => {
 app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'public', 'admin.html')));
 app.use(express.static(path.join(__dirname, 'public'), { extensions: ['html'], maxAge: '1h' }));
 
-app.listen(PORT, () => console.log(`Fichero abierto en http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Portfolio en http://localhost:${PORT}`));

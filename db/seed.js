@@ -28,9 +28,9 @@ const projects = [
     year: 2026,
     category: 'Web',
     summary:
-      'Portfolio con API propia: los proyectos, sellos, firmas y mensajes viven en SQLite y se administran desde un panel protegido.',
+      'Portfolio con API propia: los proyectos, «me gusta», comentarios y mensajes viven en SQLite y se administran desde un panel protegido.',
     details:
-      'Express sirve la API y los archivos estáticos. Sin frameworks de frontend: HTML semántico, CSS con variables y unos 400 líneas de JavaScript. Los sellos se limitan a uno por visitante, por ficha y por día.',
+      'Express sirve la API y los archivos estáticos. Sin frameworks de frontend: HTML semántico, CSS con variables y JavaScript propio. Los «me gusta» se limitan a uno por visitante, por proyecto y por día.',
     stack: 'Node.js, Express, SQLite, JavaScript, CSS',
     url: '/',
     repo: 'https://github.com/',
@@ -157,6 +157,7 @@ const skills = [
   {
     heading: 'Desarrollo web',
     subheading: 'Interfaces',
+    level: 92,
     items: 'HTML semántico, CSS moderno, JavaScript, TypeScript, Vue, React, accesibilidad',
     see_also: 'Rendimiento',
     sort: 1,
@@ -164,6 +165,7 @@ const skills = [
   {
     heading: 'Desarrollo web',
     subheading: 'Servidor',
+    level: 88,
     items: 'Node.js, Express, Fastify, REST, WebSocket, autenticación, colas de trabajo',
     see_also: 'Bases de datos',
     sort: 2,
@@ -171,6 +173,7 @@ const skills = [
   {
     heading: 'Bases de datos',
     subheading: 'Relacionales',
+    level: 84,
     items: 'PostgreSQL, SQLite, modelado, índices, migraciones, consultas con ventanas',
     see_also: 'Servidor',
     sort: 3,
@@ -178,6 +181,7 @@ const skills = [
   {
     heading: 'Rendimiento',
     subheading: 'Medición',
+    level: 72,
     items: 'Lighthouse, perfiles de CPU, caché HTTP, carga diferida',
     see_also: 'Interfaces',
     sort: 4,
@@ -185,6 +189,7 @@ const skills = [
   {
     heading: 'Infraestructura',
     subheading: 'Despliegue',
+    level: 66,
     items: 'Docker, Linux, Nginx, CI con GitHub Actions, copias de seguridad',
     see_also: null,
     sort: 5,
@@ -192,7 +197,7 @@ const skills = [
 ];
 
 const guestbook = [
-  { name: 'Lucía P.', note: 'El sello de fecha me ganó. Muy buena idea.' },
+  { name: 'Lucía P.', note: 'El banner de Ruta 34 está buenísimo. Muy buena idea.' },
   { name: 'Marco', note: 'Pasé por Ruta 34. ¿Tienen la ruta 73 también?' },
 ];
 
@@ -208,8 +213,8 @@ function seed() {
     const e = db.prepare(`INSERT INTO experience (org, role, start_date, end_date, description, sort)
       VALUES (@org, @role, @start_date, @end_date, @description, @sort)`);
     experience.forEach((r) => e.run(r));
-    const s = db.prepare(`INSERT INTO skills (heading, subheading, items, see_also, sort)
-      VALUES (@heading, @subheading, @items, @see_also, @sort)`);
+    const s = db.prepare(`INSERT INTO skills (heading, subheading, items, see_also, level, sort)
+      VALUES (@heading, @subheading, @items, @see_also, @level, @sort)`);
     skills.forEach((r) => s.run(r));
     const g = db.prepare('INSERT INTO guestbook (name, note) VALUES (@name, @note)');
     guestbook.forEach((r) => g.run(r));

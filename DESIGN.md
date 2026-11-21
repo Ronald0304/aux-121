@@ -1,162 +1,128 @@
 ---
-name: Fichero
-description: Portfolio full-stack construido como un fichero de biblioteca que funciona.
+name: Portfolio Anime
+description: Portfolio full-stack con estética de plataforma de anime, llamativo y lleno de color.
 colors:
-  cabinet-green: "#1e4d3c"
-  cabinet-deep: "#123226"
-  cabinet-highlight: "#2b6550"
-  on-cabinet: "#eef4ec"
-  on-cabinet-muted: "#b8d2c2"
-  brass: "#c9a24a"
-  brass-low: "#876720"
-  brass-high: "#f0dc9c"
-  card-stock: "#fdfdfa"
-  card-shade: "#eeefe8"
-  typewriter-ink: "#23242c"
-  ink-muted: "#545766"
-  margin-red: "#d94a3d"
-  stamp-violet: "#5b3db0"
-  guide-salmon: "#f2957a"
-  guide-mustard: "#e6b53d"
-  guide-cobalt: "#3563d6"
-  guide-lilac: "#b7a3ec"
-  guide-sage: "#9fcf9a"
+  night: "#0e0a1f"
+  night-2: "#17112f"
+  panel: "#221a45"
+  panel-2: "#2d2358"
+  line: "#3b3070"
+  text: "#f7f3ff"
+  muted: "#b9addc"
+  pink: "#ff3d8b"
+  pink-2: "#ff6aa8"
+  pink-deep: "#d6176a"
+  sun: "#ffcc29"
+  sky: "#23d5e6"
+  violet: "#7a5cff"
+  mint: "#3ee8b5"
 typography:
   display:
-    fontFamily: "Archivo, system-ui, sans-serif"
-    fontSize: "clamp(2rem, 5.2vw, 3.9rem)"
-    fontWeight: 800
+    fontFamily: "Dela Gothic One, Zen Kaku, system-ui, sans-serif"
+    fontSize: "clamp(2.6rem, 7vw, 5.6rem)"
+    fontWeight: 400
     lineHeight: 0.98
-    letterSpacing: "-0.025em"
-    fontVariation: "'wdth' 122"
-  card-title:
-    fontFamily: "Archivo, system-ui, sans-serif"
-    fontSize: "clamp(1.7rem, 3.6vw, 2.7rem)"
-    fontWeight: 800
-    lineHeight: "56px"
-    letterSpacing: "-0.02em"
-    fontVariation: "'wdth' 118"
-  typed:
-    fontFamily: "Courier Prime, Courier New, monospace"
-    fontSize: "1.02rem"
+  headline:
+    fontFamily: "Dela Gothic One, Zen Kaku, system-ui, sans-serif"
+    fontSize: "clamp(1.9rem, 4.4vw, 3.2rem)"
     fontWeight: 400
-    lineHeight: "28px"
+    lineHeight: 1.04
   body:
-    fontFamily: "Archivo, system-ui, sans-serif"
+    fontFamily: "Zen Kaku, system-ui, sans-serif"
     fontSize: "1rem"
-    fontWeight: 400
-    lineHeight: 1.55
+    fontWeight: 500
+    lineHeight: 1.6
   label:
-    fontFamily: "Archivo, system-ui, sans-serif"
+    fontFamily: "Zen Kaku, system-ui, sans-serif"
     fontSize: "0.8rem"
-    fontWeight: 700
-    lineHeight: 1.2
-    fontVariation: "'wdth' 112"
+    fontWeight: 900
+    letterSpacing: "0.06em"
 rounded:
-  card: "3px"
-  tab: "5px 5px 0 0"
+  badge: "6px"
+  field: "12px"
+  poster: "14px"
+  panel: "24px"
+  pill: "999px"
 spacing:
-  ruled-line: "28px"
-  card-edge: "8px"
   gutter: "clamp(16px, 4vw, 56px)"
-  section: "clamp(72px, 11vw, 140px)"
+  section: "clamp(56px, 8vw, 96px)"
 components:
-  button-stamp:
-    backgroundColor: "{colors.stamp-violet}"
-    textColor: "{colors.card-stock}"
-    rounded: "{rounded.card}"
-    padding: "10px 16px"
-    height: "42px"
-  button-ink:
-    backgroundColor: "{colors.typewriter-ink}"
-    textColor: "{colors.card-stock}"
-    rounded: "{rounded.card}"
-    padding: "10px 16px"
-  button-salmon:
-    backgroundColor: "{colors.guide-salmon}"
-    textColor: "{colors.typewriter-ink}"
-    rounded: "{rounded.card}"
-    padding: "10px 16px"
-  index-card:
-    backgroundColor: "{colors.card-stock}"
-    textColor: "{colors.typewriter-ink}"
-    typography: "{typography.typed}"
-    rounded: "{rounded.card}"
-  label-holder:
-    backgroundColor: "{colors.brass}"
-    textColor: "{colors.typewriter-ink}"
-    padding: "4px"
+  button-primary:
+    backgroundColor: "{colors.pink-deep}"
+    textColor: "{colors.text}"
+    rounded: "{rounded.pill}"
+    padding: "12px 22px"
+    height: "46px"
+  button-sun:
+    backgroundColor: "{colors.sun}"
+    textColor: "{colors.night}"
+    rounded: "{rounded.pill}"
+    padding: "12px 22px"
+  button-ghost:
+    backgroundColor: "rgb(255 255 255 / 0.12)"
+    textColor: "{colors.text}"
+    rounded: "{rounded.pill}"
+  chip-active:
+    backgroundColor: "{colors.sun}"
+    textColor: "{colors.night}"
+    rounded: "{rounded.pill}"
+  field:
+    backgroundColor: "{colors.night}"
+    textColor: "{colors.text}"
+    rounded: "{rounded.field}"
+    height: "48px"
 ---
 
-# Design System: Fichero
+# Design System: Portfolio Anime
 
 ## Overview
 
-**Creative North Star: "El fichero que funciona"**
+**Creative North Star: "Estreno de temporada"**
 
-The whole site is one steel card cabinet in green enamel: you open a drawer, pull out an index card by its tab and stamp it. Every dynamic feature maps to a real catalogue object: projects are catalogue cards, applause is a date stamp, the guestbook is a circulation card, contact is a call slip, skills are subject headings on drawer fronts, the admin is the front desk ("Mostrador").
+The portfolio reads like an anime streaming catalogue: a hero carousel of featured "series" (projects) with full-bleed key art, a ranked "Top de la semana" row with giant outlined numbers, a filterable catalogue of 2:3 posters, a character sheet with stat bars, experience as numbered seasons, comments and an "¿Siguiente episodio?" contact banner. The look is its own, not a copy of any platform: no third-party logos, names or art.
 
-The density is a working catalogue's: typed entries on a strict 28px ruled grid, set against a saturated enamel field that owns the page. Colour is committed, not accented: the green is the ground, and the guide-card stock (salmon, mustard, cobalt, lilac, sage) carries whole surfaces such as the loan slip and the circulation card.
+All key art is procedural SVG (`public/js/art.js`): a gradient sky, a retro striped sun, speed lines, sparkles, a city / mountain / wave silhouette, halftone dots and a katakana watermark. Each project gets a stable palette and composition from its slug, so new projects get new art automatically.
 
 **Key Characteristics:**
-- Committed cabinet-green field; white card stock with a red margin rule and pale blue lines.
-- Typed text (Courier Prime) only where a catalogue would type it: entries, dates, call numbers, form blanks.
-- An expanded heavy grotesque (Archivo, wdth 112–122) for section headings and labels.
-- Violet rubber-stamp ink for dates and confirmations, roughened by one SVG ink filter.
+- Deep night-indigo ground; colour arrives in full-bleed key art, not as scattered accents.
+- Hot pink + sun yellow as the two brand voices; sky, violet and mint for supporting roles.
+- Dela Gothic One for every headline; Zen Kaku Gothic New for body and UI.
+- Manga-panel accents: hard offset shadows on the brand mark, the contact form and the pitch box (intentional, part of the world).
 
 ## Colors
 
-### Primary
-- **Cabinet Green** (#1e4d3c): the page ground and the drawer fronts. Deep (#123226) for the interior of the cabinet; highlight (#2b6550) for the enamel sheen at the top of each drawer front.
-- **Card Stock** (#fdfdfa): every surface you read closely: index cards, the register, call slips.
+- **Night** (#0e0a1f): page ground. **Night-2** (#17112f) and **Panel** (#221a45 / #2d2358): raised surfaces, chips, bubbles.
+- **Pink** (#ff3d8b): accents, outlines, rank numbers, focus of attention. **Pink-deep** (#d6176a): any fill that carries white text (buttons, badges), for 4.6:1 contrast.
+- **Sun** (#ffcc29): secondary CTA ("Contrátame"), active filters, stat numbers, the contact section ground.
+- **Sky** (#23d5e6), **Violet** (#7a5cff), **Mint** (#3ee8b5): organisation names, stat fills, the "Disponible" status.
+- **Text** (#f7f3ff) and **Muted** (#b9addc) on night surfaces.
 
-### Secondary
-- **Stamp Violet** (#5b3db0): date stamps, the "Sellar" button, folio numbers. Use the deeper #3a2380 on salmon stock and #35207a on mustard stock, where the base violet fails contrast.
-- **Brass** (#c9a24a, low #876720, high #f0dc9c): the label holders and drawer pulls only.
-
-### Tertiary: guide-card stock
-- **Salmon** (#f2957a), **Mustard** (#e6b53d), **Cobalt** (#3563d6), **Lilac** (#b7a3ec), **Sage** (#9fcf9a): tabs and their cards' top edges, assigned per project category in order of appearance. Salmon is also the primary call to action ("Solicitar", "Entregar papeleta").
-
-### Neutral
-- **Typewriter Ink** (#23242c) and **Ink Muted** (#545766) on card stock.
-- **On Cabinet** (#eef4ec) and **On Cabinet Muted** (#b8d2c2) on the green field. Nav links use #d6e7dc to hold 4.5:1 against the enamel highlight.
-- **Margin Red** (#d94a3d) for the card's header rule and register dividers.
-
-### Named Rules
-**The Real Object Rule.** A new feature becomes a catalogue object before it becomes a component. If no library object fits, it is plain typed text on card stock, never a generic card.
-
-**The Ruled Grid Rule.** Inside an index card, every line box is a multiple of 28px, so typed text sits on the printed lines.
+**The White-on-Pink Rule.** White text never sits on #ff3d8b; use pink-deep.
 
 ## Typography
 
-**Display font:** Archivo (variable, width 62–125%), self-hosted.
-**Typed font:** Courier Prime, self-hosted.
+- **Display** Dela Gothic One, 400, clamp(2.6rem, 7vw, 5.6rem), line-height 0.98: hero titles.
+- **Headline** Dela Gothic One, clamp(1.9rem, 4.4vw, 3.2rem): section titles, underlined by a pink/sun bar.
+- **Body** Zen Kaku Gothic New 500, 1rem/1.6. **Label** Zen Kaku 900, 0.8rem, uppercase, +0.06em.
+- A kana subset of Dela Gothic One (`dela-gothic-one-kana.woff2`, U+3000–30FF) covers the decorative katakana and hiragana.
 
-**Character:** A wide, heavy library-signage grotesque over typewritten entries. The monospace face stands for the typewriter that typed real catalogue cards; it is never used as a "technical" costume.
+## Elevation & motion
 
-### Hierarchy
-- **Display** (800, wdth 122, clamp 2–3.9rem, 0.98): section titles on the green field.
-- **Card title** (800, wdth 118, clamp 1.7–2.7rem, 56px line): the title on each index card, two ruled lines tall.
-- **Typed** (400/700, 1.02rem, 28px line): all card content, dates, tables, form blanks.
-- **Body** (400, 1rem, 1.55): section intros on the green field.
-- **Label** (700, wdth 112, 0.8rem): table headers, slip headers, form labels.
-
-## Elevation
-
-Cards and sheets are lifted from the enamel by one soft, offset shadow (`0 24px 40px -24px rgb(0 0 0 / .6)`). Cards stacked in the drawer move up by 8px per depth (`--edge`), so their coloured top edges show as a stack of slivers above the front card. Brass parts get a 1px inner highlight. There are no glows or hard offset shadows.
+- Posters lift 8px and tilt −1° on hover, with a pink ring and a dark drop shadow (no coloured glows).
+- Hero slides change with a diagonal wipe (clip-path, 900ms, ease-out) while the art slowly zooms out; autoplay every 7s with a progress bar on the active thumbnail; it pauses on hover, on focus and when the tab is hidden.
+- Stat bars fill on scroll. Liking a project pops the heart icon with a spring.
+- `prefers-reduced-motion` disables all of it.
 
 ## Components
 
-- **Index card**: white stock with a 4px top edge in its category colour, a red rule under the first typed line, blue lines every 28px, and a rod hole centred at the bottom. Layout: call number column on the left, hanging-indent entry on the right.
-- **Tab**: a guide-card tab in its category colour, with the accession number typed above the title. The selected tab sits lowest and attaches to the front card.
-- **Label holder**: a brass frame around a white typed label, used for the site name and the subject-heading drawers.
-- **Stamp**: violet text inside a double-ruled box, rotated −9° to +9° (stable per date), with the `#ink` SVG filter and multiply blend.
-- **Blank**: a form field drawn as a label plus a dashed underline (call slip) or a solid ink underline (circulation card).
-- **Buttons**: stamp violet (stamp), ink (sign, sign in), salmon (submit a request). 3px radius, 42px tall.
+- **Poster** 2:3, radius 14px, key art + title + year/genre, likes badge top right, synopsis overlay on hover.
+- **Badge** radius 6px, 900 weight: yellow, pink-deep, or outlined.
+- **Buttons** pill, 46px: pink-deep (primary), sun (secondary), ghost (outline over art).
+- **Field** night fill, 2px line border, radius 12px, pink focus ring.
+- **Detail dialog** native `<dialog>` with a 16:7 key-art banner and a pink 3px frame.
 
 ## Do's and Don'ts
 
-- Do keep the cabinet green as the page ground on every surface, the admin included.
-- Do give any new animation the motion of a physical object: a card pulled up and dropped, a stamp coming down.
-- Don't add gradients, glass or neon. The only gradients are the enamel sheen and the brass frame.
-- Don't put the base stamp violet on salmon or mustard stock; use the deeper variants above.
+- Do give every new project a slug; that is what seeds its art.
+- Don't use a real platform's logo, name or artwork, or any anime character art you do not own.
+- Don't add coloured glow shadows; depth comes from dark shadows and the pink ring.

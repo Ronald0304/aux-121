@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS skills (
   subheading   TEXT NOT NULL,
   items        TEXT NOT NULL,
   see_also     TEXT,
+  level        INTEGER NOT NULL DEFAULT 70,
   sort         INTEGER NOT NULL DEFAULT 0
 );
 

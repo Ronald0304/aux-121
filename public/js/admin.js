@@ -1,4 +1,4 @@
-/* Mostrador — panel de administración. */
+/* Panel de administración. */
 (() => {
   'use strict';
   const $ = (s, el = document) => el.querySelector(s);
@@ -70,7 +70,7 @@
 
   async function loadSummary() {
     const s = await api('/api/admin/summary');
-    $('[data-summary]').textContent = `${s.unread} papeletas sin leer de ${s.messages} · ${s.guestbook} firmas${s.pending ? ` (${s.pending} ocultas)` : ''} · ${s.stamps} sellos en total`;
+    $('[data-summary]').textContent = `${s.unread} mensajes sin leer de ${s.messages} · ${s.guestbook} comentarios${s.pending ? ` (${s.pending} ocultos)` : ''} · ${s.stamps} «me gusta» en total`;
     $('[data-badge]').textContent = s.unread || '';
   }
 
@@ -78,7 +78,7 @@
   async function loadInbox() {
     const box = $('[data-inbox]');
     const rows = await api('/api/admin/messages');
-    if (!rows.length) { box.innerHTML = '<li class="empty">No hay papeletas. Cuando alguien escriba desde el formulario, aparecerá aquí.</li>'; return; }
+    if (!rows.length) { box.innerHTML = '<li class="empty">No hay mensajes. Cuando alguien escriba desde el formulario de contacto, aparecerá aquí.</li>'; return; }
     box.innerHTML = rows.map((m) => `
       <li class="${m.is_read ? 'is-read' : ''}" data-id="${m.id}">
         <details>
@@ -89,7 +89,7 @@
             <time datetime="${esc(m.created_at)}">${fmt(m.created_at)}</time>
           </summary>
           <div class="inbox__body">
-            <p class="inbox__meta">Papeleta ${String(m.id).padStart(4, '0')} · <a href="mailto:${esc(m.email)}?subject=${encodeURIComponent('Re: ' + m.subject)}">${esc(m.email)}</a></p>
+            <p class="inbox__meta">Mensaje nº ${String(m.id).padStart(4, '0')} · <a href="mailto:${esc(m.email)}?subject=${encodeURIComponent('Re: ' + m.subject)}">${esc(m.email)}</a></p>
             <p>${esc(m.body)}</p>
             <div class="actions">
               <a class="btn btn--ink" href="mailto:${esc(m.email)}?subject=${encodeURIComponent('Re: ' + m.subject)}">Responder por correo</a>
@@ -119,9 +119,9 @@
       loadSummary();
     }
     if (e.target.closest('[data-del-msg]')) {
-      if (!confirm('¿Borrar esta papeleta? No se puede deshacer.')) return;
+      if (!confirm('¿Borrar este mensaje? No se puede deshacer.')) return;
       await api(`/api/admin/messages/${li.dataset.id}`, { method: 'DELETE' });
-      toast('Papeleta borrada.');
+      toast('Mensaje borrado.');
       loadInbox(); loadSummary();
     }
   });
@@ -135,12 +135,12 @@
         <td>${fmt(g.created_at)}</td>
         <td>${esc(g.name)}</td>
         <td>${esc(g.note)}</td>
-        <td><span class="pill ${g.approved ? 'pill--ok' : 'pill--hidden'}">${g.approved ? 'Visible' : 'Oculta'}</span></td>
+        <td><span class="pill ${g.approved ? 'pill--ok' : 'pill--hidden'}">${g.approved ? 'Visible' : 'Oculto'}</span></td>
         <td><div class="actions">
           <button class="btn btn--ghost" type="button" data-approve="${g.approved ? 0 : 1}">${g.approved ? 'Ocultar' : 'Publicar'}</button>
           <button class="btn btn--danger" type="button" data-del-gb>Borrar</button>
         </div></td>
-      </tr>`).join('') : '<tr><td colspan="5" class="empty">Nadie ha firmado todavía.</td></tr>';
+      </tr>`).join('') : '<tr><td colspan="5" class="empty">Todavía no hay comentarios.</td></tr>';
   }
   $('[data-gb]').addEventListener('click', async (e) => {
     const tr = e.target.closest('tr[data-id]');
@@ -148,13 +148,13 @@
     const ap = e.target.closest('[data-approve]');
     if (ap) {
       await api(`/api/admin/guestbook/${tr.dataset.id}`, { method: 'PATCH', body: { approved: ap.dataset.approve === '1' } });
-      toast(ap.dataset.approve === '1' ? 'Firma publicada.' : 'Firma oculta.');
+      toast(ap.dataset.approve === '1' ? 'Comentario publicado.' : 'Comentario oculto.');
       loadGuestbook(); loadSummary();
     }
     if (e.target.closest('[data-del-gb]')) {
-      if (!confirm('¿Borrar esta firma?')) return;
+      if (!confirm('¿Borrar este comentario?')) return;
       await api(`/api/admin/guestbook/${tr.dataset.id}`, { method: 'DELETE' });
-      toast('Firma borrada.');
+      toast('Comentario borrado.');
       loadGuestbook(); loadSummary();
     }
   });
@@ -173,11 +173,11 @@
         <td>${esc(p.category)}</td>
         <td class="num">${p.stamps}</td>
         <td><div class="actions">
-          <a class="btn btn--ghost" href="/#ficha-${esc(p.slug)}" target="_blank" rel="noopener">Ver</a>
+          <a class="btn btn--ghost" href="/#p-${esc(p.slug)}" target="_blank" rel="noopener">Ver</a>
           <button class="btn btn--ghost" type="button" data-edit>Editar</button>
           <button class="btn btn--danger" type="button" data-del-pr>Borrar</button>
         </div></td>
-      </tr>`).join('') : '<tr><td colspan="6" class="empty">El cajón está vacío. Crea la primera ficha.</td></tr>';
+      </tr>`).join('') : '<tr><td colspan="6" class="empty">No hay proyectos. Crea el primero.</td></tr>';
   }
 
   function openEditor(p) {
@@ -185,7 +185,7 @@
     $$('.field-error', editor).forEach((x) => x.remove());
     $$('[aria-invalid]', editor).forEach((x) => x.removeAttribute('aria-invalid'));
     $('[data-editor-msg]').textContent = '';
-    $('[data-editor-title]').textContent = p ? `Editar «${p.title}»` : 'Nueva ficha';
+    $('[data-editor-title]').textContent = p ? `Editar «${p.title}»` : 'Nuevo proyecto';
     const v = p ? { ...p, stack: p.stack.join(', ') } : { year: new Date().getFullYear(), sort: projects.length + 1 };
     for (const el of editor.elements) if (el.name && v[el.name] != null) el.value = v[el.name];
     editor.elements.id.value = p ? p.id : '';
@@ -201,9 +201,9 @@
     const p = projects.find((x) => String(x.id) === tr.dataset.id);
     if (e.target.closest('[data-edit]')) openEditor(p);
     if (e.target.closest('[data-del-pr]')) {
-      if (!confirm(`¿Borrar la ficha «${p.title}» y sus sellos? No se puede deshacer.`)) return;
+      if (!confirm(`¿Borrar el proyecto «${p.title}» y sus «me gusta»? No se puede deshacer.`)) return;
       await api(`/api/admin/projects/${p.id}`, { method: 'DELETE' });
-      toast('Ficha borrada.');
+      toast('Proyecto borrado.');
       editor.hidden = true;
       loadProjects();
     }
@@ -220,7 +220,7 @@
     try {
       await api(id ? `/api/admin/projects/${id}` : '/api/admin/projects', { method: id ? 'PUT' : 'POST', body });
       editor.hidden = true;
-      toast(id ? 'Ficha actualizada.' : 'Ficha creada. Ya está en el cajón.');
+      toast(id ? 'Proyecto actualizado.' : 'Proyecto creado. Ya aparece en el portfolio.');
       loadProjects();
     } catch (err) {
       msg.textContent = err.message; msg.classList.add('is-error');

@@ -4,46 +4,42 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
-  <title>Mostrador · Fichero</title>
-  <meta name="theme-color" content="#1e4d3c">
+  <title>Panel · Portfolio</title>
+  <meta name="theme-color" content="#0e0a1f">
   <link rel="stylesheet" href="/css/styles.css">
   <link rel="stylesheet" href="/css/admin.css">
 </head>
-<body class="desk">
-  <header class="front">
-    <div class="front__inner">
-      <a class="holder" href="/"><span class="holder__label">MOSTRADOR<span class="holder__role"> — volver al fichero</span></span></a>
-      <nav class="front__nav" aria-label="Sesión">
-        <button class="front__out" type="button" data-logout hidden>Cerrar sesión</button>
-      </nav>
+<body>
+  <header class="nav">
+    <div class="nav__inner">
+      <a class="brand" href="/"><span class="brand__mark">P</span><span class="brand__name">Panel</span></a>
+      <a class="btn btn--ghost nav__cta" href="/">Ver portfolio</a>
+      <button class="btn btn--ghost nav__cta" type="button" data-logout hidden>Cerrar sesión</button>
     </div>
   </header>
 
-  <main class="desk__main">
-    <!-- acceso -->
+  <main class="desk">
     <section class="login" data-login hidden>
-      <form class="callslip login__slip" data-login-form novalidate>
-        <div class="callslip__top"><span>Acceso al mostrador</span><span data-today></span></div>
-        <label class="blank">
-          <span>Contraseña</span>
-          <input name="password" type="password" autocomplete="current-password" required autofocus>
-        </label>
-        <div class="callslip__foot">
+      <form class="panel login__panel" data-login-form novalidate>
+        <p class="kana" aria-hidden="true">ログイン</p>
+        <h1 class="login__title">Entrar al panel</h1>
+        <p class="login__date" data-today></p>
+        <label class="field"><span class="field__label">Contraseña</span><input name="password" type="password" autocomplete="current-password" required autofocus></label>
+        <div class="panel__foot">
           <p class="form-msg" data-login-msg role="status"></p>
-          <button class="btn btn--ink" type="submit">Entrar</button>
+          <button class="btn btn--pink" type="submit">Entrar</button>
         </div>
       </form>
     </section>
 
-    <!-- panel -->
     <section data-panel hidden>
-      <h1 class="desk__title">Mostrador</h1>
+      <h1 class="desk__title">Panel</h1>
       <p class="desk__summary" data-summary></p>
 
-      <div class="tabs desk__tabs" role="tablist" aria-label="Secciones del mostrador">
-        <button class="tab" type="button" role="tab" id="t-msg" aria-controls="p-msg" data-c="salmon" data-view="msg"><span class="tab__no">Bandeja</span><span class="tab__t">Papeletas <b data-badge></b></span></button>
-        <button class="tab" type="button" role="tab" id="t-gb" aria-controls="p-gb" data-c="mustard" data-view="gb"><span class="tab__no">Moderación</span><span class="tab__t">Firmas</span></button>
-        <button class="tab" type="button" role="tab" id="t-pr" aria-controls="p-pr" data-c="sage" data-view="pr"><span class="tab__no">Catálogo</span><span class="tab__t">Fichas</span></button>
+      <div class="seg" role="tablist" aria-label="Secciones del panel">
+        <button class="seg__btn" type="button" role="tab" id="t-msg" aria-controls="p-msg" data-view="msg">Mensajes <b data-badge></b></button>
+        <button class="seg__btn" type="button" role="tab" id="t-gb" aria-controls="p-gb" data-view="gb">Comentarios</button>
+        <button class="seg__btn" type="button" role="tab" id="t-pr" aria-controls="p-pr" data-view="pr">Proyectos</button>
       </div>
 
       <div class="sheet" role="tabpanel" id="p-msg" aria-labelledby="t-msg" data-pane="msg">
@@ -51,47 +47,51 @@
       </div>
 
       <div class="sheet" role="tabpanel" id="p-gb" aria-labelledby="t-gb" data-pane="gb" hidden>
-        <table class="grid">
-          <thead><tr><th scope="col">Fecha</th><th scope="col">Nombre</th><th scope="col">Nota</th><th scope="col">Estado</th><th scope="col"><span class="visually-hidden">Acciones</span></th></tr></thead>
-          <tbody data-gb></tbody>
-        </table>
+        <div class="scroll">
+          <table class="table">
+            <thead><tr><th scope="col">Fecha</th><th scope="col">Nombre</th><th scope="col">Comentario</th><th scope="col">Estado</th><th scope="col"><span class="visually-hidden">Acciones</span></th></tr></thead>
+            <tbody data-gb></tbody>
+          </table>
+        </div>
       </div>
 
       <div class="sheet" role="tabpanel" id="p-pr" aria-labelledby="t-pr" data-pane="pr" hidden>
         <div class="sheet__bar">
-          <p>Las fichas aparecen en el cajón en el orden indicado.</p>
-          <button class="btn btn--ink" type="button" data-new>Nueva ficha</button>
+          <p>Los proyectos aparecen en el portfolio en el orden indicado. Los 4 primeros salen en el carrusel.</p>
+          <button class="btn btn--pink" type="button" data-new>Nuevo proyecto</button>
         </div>
-        <table class="grid">
-          <thead><tr><th scope="col">Orden</th><th scope="col">Nº</th><th scope="col">Título</th><th scope="col">Materia</th><th scope="col" class="num">Sellos</th><th scope="col"><span class="visually-hidden">Acciones</span></th></tr></thead>
-          <tbody data-projects></tbody>
-        </table>
+        <div class="scroll">
+          <table class="table">
+            <thead><tr><th scope="col">Orden</th><th scope="col">Nº</th><th scope="col">Título</th><th scope="col">Género</th><th scope="col" class="num">Me gusta</th><th scope="col"><span class="visually-hidden">Acciones</span></th></tr></thead>
+            <tbody data-projects></tbody>
+          </table>
+        </div>
 
         <form class="editor" data-editor hidden novalidate>
           <div class="editor__head">
-            <h2 data-editor-title>Nueva ficha</h2>
+            <h2 data-editor-title>Nuevo proyecto</h2>
             <button class="btn btn--ghost" type="button" data-cancel>Cancelar</button>
           </div>
           <input type="hidden" name="id">
           <div class="editor__grid">
-            <label class="blank"><span>Título *</span><input name="title" maxlength="80" required></label>
-            <label class="blank"><span>Subtítulo</span><input name="subtitle" maxlength="100"></label>
-            <label class="blank"><span>Identificador</span><input name="slug" maxlength="60" placeholder="se genera del título"></label>
-            <label class="blank"><span>Materia</span><input name="category" maxlength="24" placeholder="Web, API, Datos…" list="cats"></label>
-            <label class="blank"><span>Nº adquisición</span><input name="accession" maxlength="12" placeholder="2026.02"></label>
-            <label class="blank"><span>Signatura</span><input name="call_number" maxlength="24" placeholder="005.1 ABC"></label>
-            <label class="blank"><span>Año</span><input name="year" type="number" min="1990" max="2100"></label>
-            <label class="blank"><span>Orden</span><input name="sort" type="number"></label>
-            <label class="blank"><span>Demo (URL)</span><input name="url" placeholder="https://…"></label>
-            <label class="blank"><span>Código (URL)</span><input name="repo" placeholder="https://github.com/…"></label>
+            <label class="field"><span class="field__label">Título *</span><input name="title" maxlength="80" required></label>
+            <label class="field"><span class="field__label">Subtítulo</span><input name="subtitle" maxlength="100"></label>
+            <label class="field"><span class="field__label">Identificador</span><input name="slug" maxlength="60" placeholder="se genera del título"></label>
+            <label class="field"><span class="field__label">Género</span><input name="category" maxlength="24" placeholder="Web, API, Datos…" list="cats"></label>
+            <label class="field"><span class="field__label">Nº de episodio</span><input name="accession" maxlength="12" placeholder="2026.02"></label>
+            <label class="field"><span class="field__label">Código interno</span><input name="call_number" maxlength="24" placeholder="005.1 ABC"></label>
+            <label class="field"><span class="field__label">Año</span><input name="year" type="number" min="1990" max="2100"></label>
+            <label class="field"><span class="field__label">Orden</span><input name="sort" type="number"></label>
+            <label class="field"><span class="field__label">Demo (URL)</span><input name="url" placeholder="https://…"></label>
+            <label class="field"><span class="field__label">Código (URL)</span><input name="repo" placeholder="https://github.com/…"></label>
           </div>
-          <label class="blank blank--area"><span>Resumen *</span><textarea name="summary" rows="3" maxlength="400" required></textarea></label>
-          <label class="blank blank--area"><span>Detalles técnicos</span><textarea name="details" rows="4" maxlength="1200"></textarea></label>
-          <label class="blank"><span>Tecnologías</span><input name="stack" maxlength="200" placeholder="separadas por comas"></label>
+          <label class="field"><span class="field__label">Resumen *</span><textarea name="summary" rows="3" maxlength="400" required></textarea></label>
+          <label class="field"><span class="field__label">Detalles técnicos</span><textarea name="details" rows="4" maxlength="1200"></textarea></label>
+          <label class="field"><span class="field__label">Tecnologías</span><input name="stack" maxlength="200" placeholder="separadas por comas"></label>
           <datalist id="cats"></datalist>
-          <div class="callslip__foot">
+          <div class="panel__foot">
             <p class="form-msg" data-editor-msg role="status"></p>
-            <button class="btn btn--salmon" type="submit">Guardar ficha</button>
+            <button class="btn btn--pink" type="submit">Guardar proyecto</button>
           </div>
         </form>
       </div>

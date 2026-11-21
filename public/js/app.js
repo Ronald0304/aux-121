@@ -1,361 +1,347 @@
-/* Fichero — lógica del portfolio público. Sin dependencias. */
+/* Portfolio — lógica pública. Sin dependencias. */
 (() => {
   'use strict';
 
   const $ = (s, el = document) => el.querySelector(s);
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const { keyArt, paletteFor, kanaFor, PALETTES } = window.KeyArt;
 
-  const MONTHS = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
-  const COLORS = ['salmon', 'mustard', 'cobalt', 'lilac', 'sage'];
-  const categoryColor = new Map();
-  const colorFor = (cat) => {
-    if (!categoryColor.has(cat)) categoryColor.set(cat, COLORS[categoryColor.size % COLORS.length]);
-    return categoryColor.get(cat);
-  };
-
+  const MONTHS = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const parseDay = (s) => {
-    if (!s) return new Date();
-    const [y, m, d] = s.slice(0, 10).split('-').map(Number);
-    return new Date(y, (m || 1) - 1, d || 1);
+  const monthYear = (ym) => { const [y, m] = String(ym).split('-').map(Number); return `${MONTHS[(m || 1) - 1]} ${y}`; };
+  const ago = (s) => {
+    const d = new Date(String(s).replace(' ', 'T') + 'Z');
+    const sec = (Date.now() - d) / 1000;
+    if (sec < 60) return 'ahora mismo';
+    if (sec < 3600) return `hace ${Math.floor(sec / 60)} min`;
+    if (sec < 86400) return `hace ${Math.floor(sec / 3600)} h`;
+    if (sec < 86400 * 30) return `hace ${Math.floor(sec / 86400)} d`;
+    return `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
   };
-  const stampDate = (d) => `${String(d.getDate()).padStart(2, '0')} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
-  const monthStamp = (ym) => { const [y, m] = ym.split('-').map(Number); return `${MONTHS[(m || 1) - 1]} ${y}`; };
-  // rotación estable por texto: el mismo sello cae siempre igual
-  const tilt = (seed, i = 0) => {
-    let h = 2166136261;
-    for (const ch of `${seed}${i}`) h = Math.imul(h ^ ch.charCodeAt(0), 16777619);
-    return ((h >>> 0) % 1000) / 1000;
-  };
+  const AVATAR = ['var(--sun)', 'var(--pink)', 'var(--sky)', 'var(--mint)', '#b39dff'];
+  const avatarColor = (name) => AVATAR[window.KeyArt.hash(name) % AVATAR.length];
+  const initials = (name) => name.trim().split(/\s+/).slice(0, 2).map((w) => w[0]).join('').toUpperCase() || '?';
 
   async function api(path, opts = {}) {
-    const res = await fetch(path, {
-      headers: { 'Content-Type': 'application/json' },
-      ...opts,
-      body: opts.body ? JSON.stringify(opts.body) : undefined,
-    });
+    const res = await fetch(path, { headers: { 'Content-Type': 'application/json' }, ...opts, body: opts.body ? JSON.stringify(opts.body) : undefined });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw Object.assign(new Error(data.error || 'No se pudo completar la petición.'), { data, status: res.status });
     return data;
   }
 
-  const today = stampDate(new Date());
-  $$('[data-today]').forEach((el) => (el.textContent = today));
+  const toastEl = $('[data-toast]');
+  let toastT;
+  const toast = (msg) => { toastEl.textContent = msg; toastEl.classList.add('is-on'); clearTimeout(toastT); toastT = setTimeout(() => toastEl.classList.remove('is-on'), 2600); };
 
-  /* =================== el cajón =================== */
+  let profile = null;
+  let projects = [];
+  const palIndex = new Map(); // slug -> paleta estable
+  const pal = (p) => PALETTES[palIndex.get(p.slug) ?? 0];
+  const likesLabel = (n) => (n === 1 ? '1 me gusta' : `${n} me gusta`);
 
-  const stage = $('[data-stage]');
-  const tabsEl = $('[data-tabs]');
-  const posEl = $('[data-pos]');
-  let cards = []; // { id, kind, data, color, el, tab }
-  let active = 0;
+  const art = (p, layout) => keyArt(p.slug, { palette: pal(p), kana: kanaFor(p.category), layout });
 
-  function mainEntryHTML(p, projects) {
-    const born = p.born_year ? `, ${p.born_year}–` : '';
-    const cats = [...new Set(projects.map((x) => x.category))];
+  /* =================== HERO =================== */
+
+  const slidesEl = $('[data-slides]');
+  const thumbsEl = $('[data-thumbs]');
+  const hero = $('.hero');
+  const DUR = 7000;
+  let slides = [];
+  let current = 0;
+  let timer = null;
+
+  function likeButton(p, extra = '') {
+    return `<button class="btn btn--ghost btn--like${p.stamped_today ? ' is-liked' : ''}${extra}" type="button" data-like="${p.id}" aria-pressed="${p.stamped_today}">
+      <svg aria-hidden="true"><use href="#${p.stamped_today ? 'i-heart-f' : 'i-heart'}"/></svg><span>${p.stamped_today ? 'Te gusta' : 'Me gusta'}</span><span class="like-count" data-like-count="${p.id}">· ${p.stamps}</span>
+    </button>`;
+  }
+
+  function introSlide() {
+    const first = profile.given_name;
     return `
-      <div class="entry">
-        <div class="entry__call">005.276\n${esc(p.surname.slice(0, 3).toUpperCase())}</div>
-        <div class="entry__main">
-          <p class="entry__heading">${esc(p.surname)}, ${esc(p.given_name)}${born}</p>
-          <h2 class="entry__title">${esc(p.given_name)} ${esc(p.surname)}<small>${esc(p.role)}${p.location ? ` · ${esc(p.location)}` : ''}${p.since_year ? ` · desde ${p.since_year}` : ''}</small></h2>
-          <p class="indent">${projects.length} fichas : con API y base de datos propia.</p>
-          <p class="entry__summary indent">${esc(p.summary)}</p>
-          ${p.note ? `<p class="indent entry__notes">${esc(p.note)}</p>` : ''}
-          <p class="entry__trace indent">${cats.map((c, i) => `${i + 1}. ${esc(c)}.`).join(' ')} I. Título.</p>
+      <div class="slide__art">${keyArt('intro-' + profile.surname, { palette: PALETTES[0], kana: 'ポートフォリオ', sunX: 0.7 })}</div>
+      <div class="slide__content">
+        <div class="badges">
+          <span class="badge badge--pink">NUEVA TEMPORADA</span>
+          ${profile.available ? '<span class="badge">Disponible para proyectos</span>' : '<span class="badge badge--line">Agenda llena</span>'}
         </div>
-      </div>
-      <div class="card__foot">
-        <p class="entry__links">
-          <a href="#solicitud">Escribirme</a>
-          ${p.github ? `<a href="${esc(p.github)}" target="_blank" rel="noopener">GitHub <svg aria-hidden="true"><use href="#i-out"/></svg></a>` : ''}
-          ${p.linkedin ? `<a href="${esc(p.linkedin)}" target="_blank" rel="noopener">LinkedIn <svg aria-hidden="true"><use href="#i-out"/></svg></a>` : ''}
-        </p>
-        <div class="stamps">
-          <div class="stamps__pad">
-            ${p.available ? `<span class="stamp stamp--big" style="--r:-7deg; right:6px; top:18px">DISPONIBLE</span>` : `<span class="stamp" style="--r:-4deg; right:6px; top:24px">Agenda llena</span>`}
-          </div>
+        <h1 class="slide__title">${esc(first)} <span class="hl">${esc(profile.surname.split(' ')[0])}</span></h1>
+        <p class="slide__sub">${esc(profile.role)}</p>
+        <p class="slide__meta"><span>${projects.length} proyectos</span>${profile.since_year ? `<span>Desde ${profile.since_year}</span>` : ''}${profile.location ? `<span>${esc(profile.location)}</span>` : ''}</p>
+        <p class="slide__syn">${esc(profile.summary)}</p>
+        <div class="slide__actions">
+          <a class="btn btn--pink btn--lg" href="#proyectos"><svg aria-hidden="true"><use href="#i-play"/></svg>Ver proyectos</a>
+          <a class="btn btn--ghost btn--lg" href="#contacto">Contrátame</a>
         </div>
       </div>`;
   }
 
-  function stampsHTML(pr) {
-    const days = pr.recent || [];
-    return days
-      .slice(0, 5)
-      .map((d, i) => {
-        const r = (tilt(pr.slug + d, i) * 16 - 8).toFixed(1);
-        const x = Math.round(tilt(pr.slug, i + 9) * 46);
-        const y = Math.round(8 + tilt(d, i + 3) * 44);
-        return `<span class="stamp" style="--r:${r}deg; right:${x}%; top:${y}px">${stampDate(parseDay(d))}</span>`;
-      })
-      .reverse()
-      .join('');
-  }
-
-  function projectHTML(pr) {
-    const links = [
-      pr.url ? `<a href="${esc(pr.url)}"${pr.url.startsWith('/') ? '' : ' target="_blank" rel="noopener"'}>Ver en vivo <svg aria-hidden="true"><use href="#i-out"/></svg></a>` : '',
-      pr.repo ? `<a href="${esc(pr.repo)}" target="_blank" rel="noopener">Código <svg aria-hidden="true"><use href="#i-out"/></svg></a>` : '',
-    ].join('');
-    const count = pr.stamps === 1 ? '1 sello' : `${pr.stamps} sellos`;
+  function projectSlide(p, i) {
     return `
-      <div class="entry">
-        <div class="entry__call">${esc(pr.call_number).replace(' ', '\n')}\n${esc(pr.year)}</div>
-        <div class="entry__main">
-          <p class="entry__heading">${esc(pr.category)} — ${esc(pr.title)}</p>
-          <h2 class="entry__title">${esc(pr.title)}${pr.subtitle ? `<small>${esc(pr.subtitle)}</small>` : ''}</h2>
-          <p class="entry__summary indent">${esc(pr.summary)}</p>
-          ${pr.details ? `<p class="indent">${esc(pr.details)}</p>` : ''}
-          <p class="entry__trace indent">Notas: ${pr.stack.map(esc).join(' — ')}.</p>
-          <p class="indent entry__notes">Nº de adquisición ${esc(pr.accession)}.</p>
+      <div class="slide__art">${art(p, 'wide')}</div>
+      <div class="slide__content">
+        <div class="badges">
+          <span class="badge">EP ${String(i).padStart(2, '0')}</span>
+          <span class="badge badge--line">${esc(p.category)}</span>
+          ${p.year >= new Date().getFullYear() ? '<span class="badge badge--pink">ESTRENO</span>' : ''}
         </div>
-      </div>
-      <div class="card__foot">
-        <p class="entry__links">${links || '<span class="entry__notes">Privado · demo bajo solicitud</span>'}</p>
-        <div class="stamps">
-          <div class="stamps__pad" data-pad>${stampsHTML(pr)}</div>
-          <div class="stamps__row">
-            <span class="stamps__count" data-count-for="${pr.id}">${count}</span>
-            <button class="btn btn--stamp${pr.stamped_today ? ' is-done' : ''}" type="button" data-stamp="${pr.id}" ${pr.stamped_today ? 'disabled' : ''}>
-              <svg aria-hidden="true"><use href="#i-stamp"/></svg>${pr.stamped_today ? 'Sellada hoy' : 'Sellar ficha'}
-            </button>
-          </div>
+        <h2 class="slide__title">${esc(p.title)}</h2>
+        ${p.subtitle ? `<p class="slide__sub">${esc(p.subtitle)}</p>` : ''}
+        <p class="slide__meta"><span>${p.year}</span><span>${p.stack.slice(0, 3).map(esc).join(', ')}</span></p>
+        <p class="slide__syn">${esc(p.summary)}</p>
+        <div class="slide__actions">
+          <button class="btn btn--pink btn--lg" type="button" data-open="${esc(p.slug)}"><svg aria-hidden="true"><use href="#i-play"/></svg>Ver proyecto</button>
+          ${likeButton(p, ' btn--lg')}
         </div>
       </div>`;
   }
 
-  function buildDrawer(profile, projects) {
-    cards = [
-      { id: 'principal', kind: 'main', data: profile, color: 'brass', label: 'Ficha principal', no: 'Autor' },
-      ...projects.map((p) => ({ id: p.slug, kind: 'project', data: p, color: colorFor(p.category), label: p.title, no: p.accession })),
-    ];
-    stage.innerHTML = '';
-    tabsEl.innerHTML = '';
-    cards.forEach((c, i) => {
-      const tab = document.createElement('button');
-      tab.type = 'button';
-      tab.className = 'tab';
-      tab.id = `tab-${c.id}`;
-      tab.setAttribute('role', 'tab');
-      tab.setAttribute('aria-controls', `ficha-${c.id}`);
-      if (c.color !== 'brass') tab.dataset.c = c.color;
-      tab.innerHTML = `<span class="tab__no">${esc(c.no)}</span><span class="tab__t">${esc(c.label)}</span>`;
-      tab.addEventListener('click', () => show(i));
-      tab.addEventListener('keydown', onTabKey);
-
-      const el = document.createElement('article');
-      el.className = 'card';
-      el.id = `ficha-${c.id}`;
-      el.setAttribute('role', 'tabpanel');
-      el.setAttribute('aria-labelledby', tab.id);
-      if (c.color !== 'brass') el.dataset.c = c.color;
-      el.innerHTML = `<div class="card__body">${c.kind === 'main' ? mainEntryHTML(profile, projects) : projectHTML(c.data)}</div>`;
-
-      c.el = el;
-      c.tab = tab;
-      tabsEl.appendChild(tab);
-      stage.appendChild(el);
-    });
-    const fromHash = cards.findIndex((c) => `#ficha-${c.id}` === location.hash);
-    layout(fromHash > 0 ? fromHash : 0);
+  function buildHero() {
+    const featured = projects.slice(0, 4);
+    slides = [{ id: 'intro', html: introSlide(), thumb: keyArt('intro-' + profile.surname, { palette: PALETTES[0], layout: 'poster' }), label: `${profile.given_name}: presentación` },
+      ...featured.map((p, i) => ({ id: p.slug, html: projectSlide(p, i + 1), thumb: art(p, 'poster'), label: p.title }))];
+    slidesEl.innerHTML = slides.map((s, i) => `<div class="slide${i === 0 ? ' is-active' : ''}" id="slide-${esc(s.id)}" role="group" aria-roledescription="diapositiva" aria-label="${i + 1} de ${slides.length}: ${esc(s.label)}">${s.html}</div>`).join('');
+    thumbsEl.innerHTML = slides.map((s, i) => `<button class="thumb" type="button" role="tab" aria-selected="${i === 0}" aria-controls="slide-${esc(s.id)}" aria-label="${esc(s.label)}" style="--dur:${DUR}ms">${s.thumb}<span class="thumb__bar"><i></i></span></button>`).join('');
+    $$('.thumb', thumbsEl).forEach((t, i) => t.addEventListener('click', () => { go(i); restart(); }));
+    $$('.slide', slidesEl).forEach((s, i) => { if (i) s.inert = true; });
+    restart();
   }
 
-  function layout(idx) {
-    active = idx;
-    const n = cards.length;
-    cards.forEach((c, i) => {
-      const depth = (i - idx + n) % n;
-      c.el.style.setProperty('--depth', depth);
-      c.el.dataset.depth = depth;
-      c.tab.style.setProperty('--depth', depth);
-      const front = depth === 0;
-      c.tab.setAttribute('aria-selected', String(front));
-      c.tab.tabIndex = front ? 0 : -1;
-      c.el.inert = !front;
-      c.el.toggleAttribute('hidden', false);
-    });
-    posEl.textContent = `Ficha ${idx + 1} de ${n}`;
+  function go(i) {
+    const n = slides.length;
+    i = (i + n) % n;
+    if (i === current) return;
+    const els = $$('.slide', slidesEl);
+    const prev = els[current];
+    const next = els[i];
+    els.forEach((el) => el.classList.remove('is-leaving', 'is-entering'));
+    prev.classList.remove('is-active');
+    prev.classList.add('is-leaving');
+    prev.inert = true;
+    next.classList.add('is-active');
+    next.inert = false;
+    if (!reduceMotion) next.classList.add('is-entering');
+    setTimeout(() => prev.classList.remove('is-leaving'), 900);
+    $$('.thumb', thumbsEl).forEach((t, k) => t.setAttribute('aria-selected', String(k === i)));
+    current = i;
   }
 
-  function show(idx, { focusTab = false } = {}) {
-    const n = cards.length;
-    if (!n) return;
-    idx = (idx + n) % n;
-    if (idx === active) return;
-    const target = cards[idx];
-    const from = (idx - active + n) % n;
-    layout(idx);
-    if (!reduceMotion) {
-      target.el.style.setProperty('--from', from);
-      target.el.classList.remove('is-pulling');
-      void target.el.offsetWidth;
-      target.el.classList.add('is-pulling');
-      target.el.addEventListener('animationend', () => target.el.classList.remove('is-pulling'), { once: true });
-    }
-    if (focusTab) target.tab.focus();
-    target.tab.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: reduceMotion ? 'auto' : 'smooth' });
-    history.replaceState(null, '', idx === 0 ? location.pathname : `#ficha-${target.id}`);
+  function restart() {
+    clearInterval(timer);
+    if (reduceMotion) return;
+    // reinicia la barra de progreso
+    const t = $$('.thumb', thumbsEl)[current];
+    if (t) { const bar = $('i', t); bar.style.animation = 'none'; void bar.offsetWidth; bar.style.animation = ''; }
+    timer = setInterval(() => { if (!hero.classList.contains('is-paused')) { go(current + 1); restart(); } }, DUR);
   }
 
-  function onTabKey(e) {
-    const map = { ArrowRight: 1, ArrowLeft: -1 };
-    if (e.key in map) { e.preventDefault(); show(active + map[e.key], { focusTab: true }); }
-    if (e.key === 'Home') { e.preventDefault(); show(0, { focusTab: true }); }
-    if (e.key === 'End') { e.preventDefault(); show(cards.length - 1, { focusTab: true }); }
-  }
-
-  $('[data-prev]').addEventListener('click', () => show(active - 1));
-  $('[data-next]').addEventListener('click', () => show(active + 1));
-  document.addEventListener('keydown', (e) => {
-    if (e.target.closest('input, textarea, select, [role="tab"]') || e.metaKey || e.ctrlKey || e.altKey) return;
-    const r = $('#cajon').getBoundingClientRect();
-    if (r.bottom < 80 || r.top > innerHeight * 0.6) return;
-    if (e.key === 'ArrowRight') show(active + 1);
-    if (e.key === 'ArrowLeft') show(active - 1);
+  hero.addEventListener('mouseenter', () => hero.classList.add('is-paused'));
+  hero.addEventListener('mouseleave', () => hero.classList.remove('is-paused'));
+  hero.addEventListener('focusin', () => hero.classList.add('is-paused'));
+  hero.addEventListener('focusout', (e) => { if (!hero.contains(e.relatedTarget)) hero.classList.remove('is-paused'); });
+  document.addEventListener('visibilitychange', () => hero.classList.toggle('is-paused', document.hidden));
+  $('[data-prev]').addEventListener('click', () => { go(current - 1); restart(); });
+  $('[data-next]').addEventListener('click', () => { go(current + 1); restart(); });
+  let tx = null;
+  slidesEl.addEventListener('touchstart', (e) => { tx = e.touches[0].clientX; }, { passive: true });
+  slidesEl.addEventListener('touchend', (e) => {
+    if (tx == null) return;
+    const dx = e.changedTouches[0].clientX - tx; tx = null;
+    if (Math.abs(dx) > 50) { go(current + (dx < 0 ? 1 : -1)); restart(); }
   });
 
-  // gesto: deslizar la ficha a los lados en pantallas táctiles
-  let touchX = null;
-  stage.addEventListener('touchstart', (e) => { touchX = e.touches[0].clientX; }, { passive: true });
-  stage.addEventListener('touchend', (e) => {
-    if (touchX == null) return;
-    const dx = e.changedTouches[0].clientX - touchX;
-    touchX = null;
-    if (Math.abs(dx) > 60) show(active + (dx < 0 ? 1 : -1));
+  /* =================== TOP + CATÁLOGO =================== */
+
+  function posterHTML(p, { rank } = {}) {
+    const isNew = p.year >= new Date().getFullYear();
+    return `
+      <button class="poster" type="button" data-open="${esc(p.slug)}" aria-label="${esc(p.title)}: ver detalle">
+        ${art(p, 'poster')}
+        ${isNew && !rank ? '<span class="badge badge--pink poster__new">ESTRENO</span>' : ''}
+        <span class="poster__likes"><svg aria-hidden="true"><use href="#i-heart-f"/></svg><span data-like-count-plain="${p.id}">${p.stamps}</span></span>
+        <span class="poster__info">
+          <span class="poster__title">${esc(p.title)}</span>
+          <span class="poster__meta">${p.year} · ${esc(p.category)}</span>
+        </span>
+        <span class="poster__hover" aria-hidden="true">
+          <span class="poster__title">${esc(p.title)}</span>
+          <p>${esc(p.summary)}</p>
+          <span class="poster__play"><svg><use href="#i-play"/></svg>Ver proyecto</span>
+        </span>
+      </button>`;
+  }
+
+  function buildTop() {
+    const top = [...projects].sort((a, b) => b.stamps - a.stamps || b.year - a.year).slice(0, 5);
+    $('[data-top]').innerHTML = top.map((p, i) => `<li><span class="rank" aria-hidden="true">${i + 1}</span>${posterHTML(p, { rank: true })}</li>`).join('');
+  }
+
+  let filter = 'Todos';
+  function buildFilters() {
+    const cats = ['Todos', ...new Set(projects.map((p) => p.category))];
+    $('[data-filters]').innerHTML = cats.map((c) => `<button class="chip" type="button" aria-pressed="${c === filter}" data-filter="${esc(c)}">${esc(c)}</button>`).join('');
+  }
+  function buildGrid() {
+    const list = filter === 'Todos' ? projects : projects.filter((p) => p.category === filter);
+    $('[data-grid]').innerHTML = list.length
+      ? list.map((p, i) => `<li style="animation-delay:${i * 40}ms">${posterHTML(p)}</li>`).join('')
+      : '<li class="grid__empty">No hay proyectos en este género todavía.</li>';
+  }
+  $('[data-filters]').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-filter]');
+    if (!b) return;
+    filter = b.dataset.filter;
+    $$('[data-filter]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    buildGrid();
   });
 
-  /* sellar */
-  stage.addEventListener('click', async (e) => {
-    const btn = e.target.closest('[data-stamp]');
-    if (!btn || btn.disabled) return;
-    const id = btn.dataset.stamp;
+  /* =================== DETALLE =================== */
+
+  const dialog = $('[data-detail]');
+  function openDetail(slug) {
+    const p = projects.find((x) => x.slug === slug);
+    if (!p) return;
+    const idx = projects.indexOf(p) + 1;
+    $('[data-detail-art]').innerHTML = art(p, 'wide');
+    $('[data-detail-body]').innerHTML = `
+      <div class="badges"><span class="badge">EP ${String(idx).padStart(2, '0')}</span><span class="badge badge--line">${esc(p.category)}</span><span class="badge badge--line">${p.year}</span></div>
+      <h2 id="detail-t">${esc(p.title)}</h2>
+      ${p.subtitle ? `<p class="slide__sub">${esc(p.subtitle)}</p>` : ''}
+      <div class="slide__actions">
+        ${p.url ? `<a class="btn btn--pink" href="${esc(p.url)}"${p.url.startsWith('/') ? '' : ' target="_blank" rel="noopener"'}><svg aria-hidden="true"><use href="#i-play"/></svg>Ver demo</a>` : ''}
+        ${p.repo ? `<a class="btn btn--ghost" href="${esc(p.repo)}" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-code"/></svg>Código</a>` : ''}
+        ${likeButton(p)}
+      </div>
+      <div class="detail__cols">
+        <div>
+          <p>${esc(p.summary)}</p>
+          ${p.details ? `<p>${esc(p.details)}</p>` : ''}
+          ${!p.url && !p.repo ? '<p style="color:var(--muted)">Proyecto privado. Te muestro una demo si me escribes.</p>' : ''}
+        </div>
+        <dl class="detail__side">
+          <dt>Tecnologías</dt><dd><ul class="chips">${p.stack.map((s) => `<li>${esc(s)}</li>`).join('')}</ul></dd>
+          <dt>Nº de episodio</dt><dd>${esc(p.accession)}</dd>
+          <dt>Popularidad</dt><dd data-like-count-text="${p.id}">${likesLabel(p.stamps)}</dd>
+        </dl>
+      </div>`;
+    dialog.showModal();
+    history.replaceState(null, '', `#p-${p.slug}`);
+  }
+  dialog.addEventListener('close', () => history.replaceState(null, '', location.pathname));
+  dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
+  $('[data-close]').addEventListener('click', () => dialog.close());
+
+  document.addEventListener('click', (e) => {
+    const o = e.target.closest('[data-open]');
+    if (o) { openDetail(o.dataset.open); }
+  });
+
+  /* =================== ME GUSTA =================== */
+
+  document.addEventListener('click', async (e) => {
+    const btn = e.target.closest('[data-like]');
+    if (!btn) return;
+    const id = btn.dataset.like;
+    const p = projects.find((x) => String(x.id) === id);
+    if (p?.stamped_today) { toast('Ya le diste me gusta hoy. ¡Gracias!'); return; }
     btn.setAttribute('aria-busy', 'true');
-    btn.disabled = true;
     try {
-      const { project, already } = await api(`/api/projects/${id}/stamp`, { method: 'POST' });
-      const card = btn.closest('.card');
-      const pad = $('[data-pad]', card);
-      if (!already) {
-        const r = (tilt(project.slug + Date.now()) * 18 - 9).toFixed(1);
-        const s = document.createElement('span');
-        s.className = 'stamp is-new';
-        s.style.cssText = `--r:${r}deg; right:${Math.round(tilt(id, 2) * 30)}%; top:${Math.round(12 + tilt(id, 5) * 30)}px`;
-        s.textContent = today;
-        pad.appendChild(s);
-        $$('.stamp:not(.is-new)', pad).slice(0, -4).forEach((x) => x.remove());
-      }
-      $(`[data-count-for="${id}"]`).textContent = project.stamps === 1 ? '1 sello' : `${project.stamps} sellos`;
-      btn.classList.add('is-done');
-      btn.innerHTML = '<svg aria-hidden="true"><use href="#i-stamp"/></svg>Sellada hoy';
-      const row = $(`[data-ledger-id="${id}"] [data-ledger-stamps]`);
-      if (row) row.textContent = project.stamps;
+      const { project } = await api(`/api/projects/${id}/stamp`, { method: 'POST' });
+      Object.assign(p, { stamps: project.stamps, stamped_today: true });
+      $$(`[data-like="${id}"]`).forEach((b) => {
+        b.classList.add('is-liked');
+        b.setAttribute('aria-pressed', 'true');
+        $('use', b).setAttribute('href', '#i-heart-f');
+        b.children[1].textContent = 'Te gusta';
+      });
+      $$(`[data-like-count="${id}"]`).forEach((el) => (el.textContent = `· ${project.stamps}`));
+      $$(`[data-like-count-plain="${id}"]`).forEach((el) => (el.textContent = project.stamps));
+      $$(`[data-like-count-text="${id}"]`).forEach((el) => (el.textContent = likesLabel(project.stamps)));
+      toast('¡Gracias por el me gusta!');
     } catch (err) {
-      btn.disabled = false;
-      $(`[data-count-for="${id}"]`).textContent = err.message;
+      toast(err.message);
     } finally {
       btn.removeAttribute('aria-busy');
     }
   });
 
-  /* =================== registro =================== */
+  /* =================== PERSONAJE =================== */
 
-  function buildLedger(projects) {
-    const body = $('[data-ledger]');
-    if (!projects.length) { body.innerHTML = '<tr><td colspan="6" class="ledger__empty">Todavía no hay fichas en el registro.</td></tr>'; return; }
-    const sorted = [...projects].sort((a, b) => b.accession.localeCompare(a.accession));
-    body.innerHTML = sorted.map((p) => `
-      <tr data-ledger-id="${p.id}" data-slug="${esc(p.slug)}">
-        <td>${esc(p.accession)}</td>
-        <td>${esc(p.call_number)}</td>
-        <td class="ledger__title"><button type="button">${esc(p.title)}</button>${p.subtitle ? `<br><span class="ledger__sub">${esc(p.subtitle)}</span>` : ''}</td>
-        <td><span class="swatch" style="--c: var(--${colorFor(p.category)})"></span>${esc(p.category)}</td>
-        <td class="num">${p.year}</td>
-        <td class="num" data-ledger-stamps>${p.stamps}</td>
-      </tr>`).join('');
-    body.addEventListener('click', (e) => {
-      const tr = e.target.closest('tr[data-slug]');
-      if (!tr) return;
-      const idx = cards.findIndex((c) => c.id === tr.dataset.slug);
-      if (idx < 0) return;
-      $('#cajon').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
-      setTimeout(() => show(idx), reduceMotion ? 0 : 380);
-    });
+  async function buildCharacter() {
+    const ini = initials(`${profile.given_name} ${profile.surname}`);
+    $('[data-character-art]').innerHTML = `${keyArt('pj-' + profile.surname, { palette: PALETTES[3], kana: 'キャラクター', layout: 'poster' })}
+      <div class="emblem"><div class="emblem__ring"><span class="emblem__initials">${esc(ini[0])}<span>${esc(ini[1] || '')}</span></span></div></div>
+      <span class="emblem__tag">${esc(profile.role)}</span>`;
+    const years = profile.since_year ? new Date().getFullYear() - profile.since_year : null;
+    $('[data-specs]').innerHTML = [
+      ['Nombre', `${profile.given_name} ${profile.surname}`],
+      ['Clase', profile.role],
+      profile.location && ['Base', profile.location],
+      years != null && ['Nivel', `${years} años de experiencia`],
+      ['Estado', profile.available ? 'Disponible' : 'Agenda llena', profile.available ? 'is-on' : ''],
+    ].filter(Boolean).map(([k, v, c]) => `<div><dt>${k}</dt><dd class="${c || ''}">${esc(v)}</dd></div>`).join('');
+    $('[data-bio]').textContent = profile.note || profile.summary;
+
+    try {
+      const skills = await api('/api/skills');
+      const colors = [['#ff3d8b', '#ff6aa8'], ['#ffcc29', '#ffd95c'], ['#23d5e6', '#5ee6f0'], ['#7a5cff', '#9d86ff'], ['#3ee8b5', '#7af0cf']];
+      $('[data-stats]').innerHTML = skills.map((s, i) => `
+        <li class="stat"><span>${esc(s.subheading === s.heading ? s.heading : s.subheading)}</span>
+          <span class="stat__track" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${s.level}" aria-label="${esc(s.subheading)}"><span class="stat__fill" style="--v:${s.level};--c1:${colors[i % 5][0]};--c2:${colors[i % 5][1]}"></span></span>
+          <span class="stat__num">${s.level}</span></li>`).join('');
+      $('[data-abilities]').innerHTML = [...new Set(skills.flatMap((s) => s.items))].map((x) => `<li>${esc(x)}</li>`).join('');
+      const io = new IntersectionObserver((ents) => ents.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('is-visible'); io.disconnect(); } }), { threshold: 0.3 });
+      io.observe($('[data-stats]'));
+    } catch {
+      $('[data-stats]').innerHTML = '<li>No se pudieron cargar las habilidades.</li>';
+    }
   }
 
-  /* =================== préstamos =================== */
+  /* =================== TEMPORADAS =================== */
 
-  async function loadExperience() {
-    const list = $('[data-experience]');
+  async function loadSeasons() {
+    const box = $('[data-seasons]');
     try {
       const rows = await api('/api/experience');
-      if (!rows.length) { list.innerHTML = '<li class="slip__row slip__row--empty">Sin préstamos registrados.</li>'; return; }
-      list.innerHTML = rows.map((r, i) => `
-        <li class="slip__row">
-          <div class="slip__dates">
-            <span class="stamp" style="--r:${(tilt(r.org, i) * 8 - 5).toFixed(1)}deg">${monthStamp(r.start_date)}</span>
-            ${r.end_date
-              ? `<span class="stamp" style="--r:${(tilt(r.role, i) * 8 - 3).toFixed(1)}deg">${monthStamp(r.end_date)}</span>`
-              : `<span class="stamp" style="--r:3deg">EN CURSO</span>`}
-          </div>
+      box.innerHTML = rows.length ? rows.map((r, i) => `
+        <li class="season">
+          <p class="season__no">Temporada <b>${rows.length - i}</b></p>
           <div>
-            <h3 class="slip__role">${esc(r.role)}</h3>
-            <p class="slip__org">${esc(r.org)}</p>
-            <p class="slip__desc">${esc(r.description)}</p>
+            <h3 class="season__role">${esc(r.role)}</h3>
+            <p class="season__org">${esc(r.org)}</p>
+            <p class="season__desc">${esc(r.description)}</p>
           </div>
-        </li>`).join('');
+          <p class="season__dates">${monthYear(r.start_date)} – ${r.end_date ? monthYear(r.end_date) : 'hoy'}<br>${r.end_date ? '' : '<span class="badge badge--pink">EN EMISIÓN</span>'}</p>
+        </li>`).join('') : '<li class="thread__empty">Sin temporadas registradas.</li>';
     } catch {
-      list.innerHTML = '<li class="slip__row slip__row--empty">No se pudo cargar la experiencia. Recarga la página.</li>';
+      box.innerHTML = '<li class="thread__empty">No se pudo cargar la experiencia. Recarga la página.</li>';
     }
   }
 
-  /* =================== materias =================== */
+  /* =================== COMENTARIOS =================== */
 
-  async function loadSkills() {
-    const box = $('[data-skills]');
-    try {
-      const rows = await api('/api/skills');
-      const slug = (s) => 'materia-' + s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-');
-      const bySub = new Map(rows.map((r) => [r.subheading.toLowerCase(), r]));
-      const byHead = new Map(rows.map((r) => [r.heading.toLowerCase(), r]));
-      box.innerHTML = rows.map((r) => {
-        const target = r.see_also && (bySub.get(r.see_also.toLowerCase()) || byHead.get(r.see_also.toLowerCase()));
-        return `
-        <div class="drawerface" id="${slug(r.heading + '-' + r.subheading)}">
-          <span class="holder"><span class="holder__label">${esc(r.heading.toUpperCase())} — ${esc(r.subheading)}</span></span>
-          <ul class="drawerface__items">${r.items.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
-          ${target ? `<p class="drawerface__see">Véase también: <a href="#${slug(target.heading + '-' + target.subheading)}" data-see>${esc(r.see_also)}</a></p>` : ''}
-          <div class="drawerface__pull" aria-hidden="true"></div>
-        </div>`;
-      }).join('');
-      box.addEventListener('click', (e) => {
-        const a = e.target.closest('[data-see]');
-        if (!a) return;
-        const t = document.querySelector(a.getAttribute('href'));
-        if (!t) return;
-        t.classList.remove('is-flash'); void t.offsetWidth; t.classList.add('is-flash');
-        setTimeout(() => t.classList.remove('is-flash'), 1400);
-      });
-    } catch {
-      box.innerHTML = '<p class="drawerface">No se pudieron cargar las materias.</p>';
-    }
-  }
-
-  /* =================== libro de visitas =================== */
-
-  const gbBody = $('[data-guestbook]');
-  const gbRow = (g, isNew = false) => `
-    <tr${isNew ? ' class="is-new"' : ''}><td>${stampDate(parseDay(g.created_at))}</td><td>${esc(g.name)}</td><td>${esc(g.note)}</td></tr>`;
-
-  async function loadGuestbook() {
+  const thread = $('[data-guestbook]');
+  const commentHTML = (g, isNew) => `
+    <li class="comment${isNew ? ' is-new' : ''}">
+      <span class="avatar" style="--c:${avatarColor(g.name)}" aria-hidden="true">${esc(initials(g.name))}</span>
+      <div class="bubble"><div class="bubble__head"><span class="bubble__name">${esc(g.name)}</span><time class="bubble__time" datetime="${esc(g.created_at)}">${ago(g.created_at)}</time></div><p>${esc(g.note)}</p></div>
+    </li>`;
+  async function loadComments() {
     try {
       const rows = await api('/api/guestbook');
-      gbBody.innerHTML = rows.length ? rows.map((g) => gbRow(g)).join('') : '<tr><td colspan="3">Nadie ha firmado todavía. Estrena la tarjeta.</td></tr>';
+      thread.innerHTML = rows.length ? rows.map((g) => commentHTML(g)).join('') : '<li class="thread__empty">Todavía no hay comentarios. ¡Sé el primero!</li>';
     } catch {
-      gbBody.innerHTML = '<tr><td colspan="3">No se pudieron cargar las firmas.</td></tr>';
+      thread.innerHTML = '<li class="thread__empty">No se pudieron cargar los comentarios.</li>';
     }
   }
+  const composerAvatar = $('[data-composer-avatar]');
+  $('[data-guest-form] [name="name"]').addEventListener('input', (e) => {
+    const v = e.target.value.trim();
+    composerAvatar.textContent = v ? initials(v) : '?';
+    composerAvatar.style.setProperty('--c', v ? avatarColor(v) : 'var(--sun)');
+  });
 
   function wireForm(form, msgEl, submit) {
     form.addEventListener('submit', async (e) => {
@@ -364,74 +350,72 @@
       $$('[aria-invalid]', form).forEach((el) => el.removeAttribute('aria-invalid'));
       msgEl.classList.remove('is-error');
       msgEl.textContent = 'Enviando…';
-      btn.disabled = true;
-      btn.setAttribute('aria-busy', 'true');
+      btn.disabled = true; btn.setAttribute('aria-busy', 'true');
       try {
         await submit(Object.fromEntries(new FormData(form)));
       } catch (err) {
-        msgEl.textContent = err.message;
-        msgEl.classList.add('is-error');
+        msgEl.textContent = err.message; msgEl.classList.add('is-error');
         const f = err.data?.field && form.elements[err.data.field];
         if (f) { f.setAttribute('aria-invalid', 'true'); f.focus(); }
       } finally {
-        btn.disabled = false;
-        btn.removeAttribute('aria-busy');
+        btn.disabled = false; btn.removeAttribute('aria-busy');
       }
     });
   }
 
-  const gbForm = $('[data-guest-form]');
-  const gbMsg = $('[data-guest-msg]');
-  wireForm(gbForm, gbMsg, async (body) => {
+  wireForm($('[data-guest-form]'), $('[data-guest-msg]'), async (body) => {
     const res = await api('/api/guestbook', { method: 'POST', body });
-    if (res.pending) {
-      gbMsg.textContent = 'Gracias. Tu firma aparecerá cuando la revise.';
-    } else if (res.entry) {
-      if (!gbBody.querySelector('tr td + td')) gbBody.innerHTML = '';
-      gbBody.insertAdjacentHTML('afterbegin', gbRow(res.entry, true));
-      gbMsg.textContent = 'Firmado. Gracias por pasar.';
+    const msg = $('[data-guest-msg]');
+    if (res.pending) msg.textContent = 'Gracias. Tu comentario aparecerá cuando lo revise.';
+    else if (res.entry) {
+      if (!thread.querySelector('.comment')) thread.innerHTML = '';
+      thread.insertAdjacentHTML('afterbegin', commentHTML(res.entry, true));
+      msg.textContent = '¡Publicado!';
     }
-    gbForm.reset();
+    $('[data-guest-form]').reset();
+    composerAvatar.textContent = '?';
   });
 
-  /* =================== solicitud =================== */
+  /* =================== CONTACTO =================== */
 
-  const ctForm = $('[data-contact-form]');
-  const ctMsg = $('[data-contact-msg]');
-  wireForm(ctForm, ctMsg, async (body) => {
+  wireForm($('[data-contact-form]'), $('[data-contact-msg]'), async (body) => {
     const res = await api('/api/messages', { method: 'POST', body });
-    $('[data-folio]').textContent = res.folio;
-    const rec = $('[data-received]');
-    rec.innerHTML = `<span class="stamp stamp--big is-new" style="--r:-9deg">RECIBIDO · ${today}</span>`;
-    ctMsg.textContent = `Papeleta ${res.folio} entregada. Te respondo al correo que dejaste.`;
-    ctForm.reset();
+    $('[data-contact-msg]').textContent = `¡Mensaje nº ${res.folio} enviado! Te respondo al correo que dejaste.`;
+    toast('¡Mensaje enviado!');
+    $('[data-contact-form]').reset();
   });
 
-  /* =================== arranque =================== */
+  /* =================== ARRANQUE =================== */
 
   async function boot() {
     try {
-      const [profile, projects] = await Promise.all([api('/api/profile'), api('/api/projects')]);
+      [profile, projects] = await Promise.all([api('/api/profile'), api('/api/projects')]);
       if (!profile) throw new Error('Falta el perfil en la base de datos.');
-      $('[data-bind="label"]').innerHTML = `${esc(profile.surname.toUpperCase())}, ${esc(profile.given_name[0])}.<span class="holder__role"> — ${esc(profile.role)}</span>`;
-      $('[data-bind="h1"]').textContent = `${profile.given_name} ${profile.surname}, ${profile.role}`;
-      document.title = `${profile.given_name} ${profile.surname} · ${profile.role}`;
-      $('[data-count]').textContent = projects.length + 1;
+      projects.forEach((p, i) => palIndex.set(p.slug, (i + 1) % PALETTES.length));
+      const full = `${profile.given_name} ${profile.surname}`;
+      document.title = `${full} · ${profile.role}`;
+      $('[data-bind="initials"]').textContent = initials(full);
+      $('[data-bind="brand"]').textContent = profile.given_name;
+      $('[data-count]').textContent = projects.length;
+      $('[data-contact-art]').innerHTML = keyArt('contacto', { palette: PALETTES[2], kana: 'つづく' });
       $('[data-direct]').innerHTML = [
-        profile.email && `<li><span>Correo</span><a href="mailto:${esc(profile.email)}">${esc(profile.email)}</a></li>`,
-        profile.github && `<li><span>GitHub</span><a href="${esc(profile.github)}" target="_blank" rel="noopener">${esc(profile.github.replace(/^https?:\/\/(www\.)?/, ''))}</a></li>`,
-        profile.linkedin && `<li><span>LinkedIn</span><a href="${esc(profile.linkedin)}" target="_blank" rel="noopener">${esc(profile.linkedin.replace(/^https?:\/\/(www\.)?/, ''))}</a></li>`,
+        profile.email && `<li><a href="mailto:${esc(profile.email)}">${esc(profile.email)}</a></li>`,
+        profile.github && `<li><a href="${esc(profile.github)}" target="_blank" rel="noopener">GitHub</a></li>`,
+        profile.linkedin && `<li><a href="${esc(profile.linkedin)}" target="_blank" rel="noopener">LinkedIn</a></li>`,
       ].filter(Boolean).join('');
-      buildDrawer(profile, projects);
-      buildLedger(projects);
+      buildHero();
+      buildTop();
+      buildFilters();
+      buildGrid();
+      buildCharacter();
+      const m = location.hash.match(/^#p-(.+)$/);
+      if (m) openDetail(decodeURIComponent(m[1]));
     } catch (err) {
-      stage.innerHTML = `<article class="card" data-depth="0"><div class="card__body"><p class="typed loading-line">No pude abrir el cajón: ${esc(err.message)}</p><p class="typed"><button class="btn btn--ink" type="button" onclick="location.reload()">Intentar de nuevo</button></p></div></article>`;
-      $('[data-ledger]').innerHTML = '<tr><td colspan="6" class="ledger__empty">El registro no está disponible ahora.</td></tr>';
+      slidesEl.innerHTML = `<div class="slide is-active"><div class="slide__content"><h1 class="slide__title">Ups.</h1><p class="slide__syn">No se pudo cargar el portfolio: ${esc(err.message)}</p><div class="slide__actions"><button class="btn btn--pink" type="button" onclick="location.reload()">Reintentar</button></div></div></div>`;
     }
   }
 
   boot();
-  loadExperience();
-  loadSkills();
-  loadGuestbook();
+  loadSeasons();
+  loadComments();
 })();

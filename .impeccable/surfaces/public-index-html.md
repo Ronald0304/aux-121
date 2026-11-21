@@ -7,18 +7,18 @@ related_targets: []
 
 # Surface: Portfolio home (public/index.html)
 
-Mode: Experience. Audience: recruiters, tech leads and clients evaluating a full-stack developer. Job: understand what this person builds, then write to them. Constraints: vanilla HTML/CSS/JS, content from SQLite via API, sample content is synthetic and editable.
+Mode: Experience. Audience: recruiters, tech leads and clients evaluating a full-stack developer. Pinned by the user: "muy llamativo, tipo anime, como el de Crunchyroll". Interpreted as the anime-streaming genre, never that platform's logo, name or art.
 
 ## Direction contract
 
-THESIS: The portfolio is a working library card catalogue: one drawer of index cards, pulled out and stamped in place. It refuses the dark hero + gradient name + equal grid of project cards.
+THESIS: The portfolio is an anime streaming catalogue: projects are series with key art, ranked and filterable. It replaces the earlier card-catalogue world, which the user rejected.
 
-OWN-WORLD: Deep cabinet-green enamel field; a brass label holder; white index cards with a red top rule and pale blue lines; guide-card tabs in salmon, cobalt and mustard; violet rubber-stamp ink; typed entries (Courier Prime) under an expanded heavy grotesque for labels (Archivo, wide axis).
+OWN-WORLD: Night-indigo ground, full-bleed procedural key art (gradient sky, striped sun, speed lines, skyline, halftone, katakana), hot pink + sun yellow, Dela Gothic One headlines, pill buttons, manga-panel offset shadows.
 
-STORY: The visitor reads the main-entry card (who), flips through project cards by tab (what), stamps the ones they like, scans the accession register, subject headings and loan slip (experience), signs the circulation card and fills a call slip to get in touch.
+STORY: The visitor sees the developer as this season's premiere, browses the top and the catalogue, opens a project's detail, likes it, reads the character sheet and seasons, comments, then writes.
 
-FIRST VIEWPORT: The drawer front spans the top with the brass label (name, role, years) and typed nav. Below it the open drawer: one large card at the front (the main entry), with the tabs of the project cards rising behind it. Primary action: the "Solicitar" call-slip link on the drawer front, plus the tabs themselves.
+FIRST VIEWPORT: Full-bleed hero carousel; title, badges, synopsis and Play/Contrátame on the left; thumbnail posters with progress bars at the bottom right.
 
-FORM: Library card catalogue, candidate 4 of 7. seed:8bea1aecba0d1c0e. Signature interaction: clicking a tab pulls that card forward; "Sellar" stamps a dated violet stamp onto the card, persisted.
+FORM: Brief-pinned direction (anime streaming). seed:8bea1aecba0d1c0e (earlier roll, superseded by the user's pin).
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

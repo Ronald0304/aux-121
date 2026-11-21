@@ -3,183 +3,173 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Fichero · Portfolio full-stack</title>
-  <meta name="description" content="Portfolio de un desarrollador full-stack, organizado como un fichero de biblioteca que funciona: proyectos, experiencia, habilidades y contacto.">
-  <meta name="theme-color" content="#1e4d3c">
-  <link rel="preload" href="/fonts/archivo-latin-standard-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="/fonts/courier-prime-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <title>Portfolio full-stack</title>
+  <meta name="description" content="Portfolio de un desarrollador full-stack: proyectos, ficha de personaje, temporadas de experiencia, comentarios y contacto.">
+  <meta name="theme-color" content="#0e0a1f">
+  <link rel="preload" href="/fonts/dela-gothic-one-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/zen-kaku-gothic-new-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/styles.css">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%231e4d3c'/%3E%3Crect x='6' y='9' width='20' height='15' rx='1' fill='%23fdfdfa'/%3E%3Crect x='6' y='11' width='20' height='1.4' fill='%23d94a3d'/%3E%3Crect x='9' y='5' width='7' height='5' rx='1' fill='%23e6b53d'/%3E%3Ccircle cx='16' cy='21' r='1.6' fill='%231e4d3c'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23ff3d8b'/%3E%3Cpath d='M12 9l12 7-12 7z' fill='%23fff'/%3E%3C/svg%3E">
 </head>
 <body>
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
     <defs>
-      <filter id="ink" x="-10%" y="-20%" width="120%" height="140%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="n"/>
-        <feDisplacementMap in="SourceGraphic" in2="n" scale="1.6" result="d"/>
-        <feComponentTransfer in="n" result="speck"><feFuncA type="discrete" tableValues="1 1 1 0.15 1 1 1 1"/></feComponentTransfer>
-        <feComposite in="d" in2="speck" operator="in"/>
-      </filter>
-      <symbol id="i-stamp" viewBox="0 0 24 24"><path d="M9 3.5h6v4.2c0 1.2.6 2 1.6 2.6l.9.5c.9.5 1.5 1.5 1.5 2.6V15H5v-1.6c0-1.1.6-2.1 1.5-2.6l.9-.5c1-.6 1.6-1.4 1.6-2.6z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 18.5h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
-      <symbol id="i-left" viewBox="0 0 24 24"><path d="M14.5 6 8.5 12l6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-      <symbol id="i-right" viewBox="0 0 24 24"><path d="m9.5 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-      <symbol id="i-out" viewBox="0 0 24 24"><path d="M10 5H6.5A1.5 1.5 0 0 0 5 6.5v11A1.5 1.5 0 0 0 6.5 19h11a1.5 1.5 0 0 0 1.5-1.5V14M13 5h6v6M19 5l-8 8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.6-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z" fill="currentColor"/></symbol>
+      <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.3s-7.6-4.6-9.2-9.4C1.7 7.6 3.9 4.5 7.2 4.5c2 0 3.5 1.1 4.8 2.8 1.3-1.7 2.8-2.8 4.8-2.8 3.3 0 5.5 3.1 4.4 6.4-1.6 4.8-9.2 9.4-9.2 9.4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+      <symbol id="i-heart-f" viewBox="0 0 24 24"><path d="M12 20.3s-7.6-4.6-9.2-9.4C1.7 7.6 3.9 4.5 7.2 4.5c2 0 3.5 1.1 4.8 2.8 1.3-1.7 2.8-2.8 4.8-2.8 3.3 0 5.5 3.1 4.4 6.4-1.6 4.8-9.2 9.4-9.2 9.4z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+      <symbol id="i-code" viewBox="0 0 24 24"><path d="m8.5 7-5 5 5 5M15.5 7l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-left" viewBox="0 0 24 24"><path d="M14.5 6 8.5 12l6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-right" viewBox="0 0 24 24"><path d="m9.5 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+      <symbol id="i-send" viewBox="0 0 24 24"><path d="M4 12 20 4l-4 16-4-7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+      <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="2.3" fill="currentColor"/></symbol>
+      <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 2c.6 5.4 4.6 9.4 10 10-5.4.6-9.4 4.6-10 10-.6-5.4-4.6-9.4-10-10 5.4-.6 9.4-4.6 10-10z" fill="currentColor"/></symbol>
     </defs>
   </svg>
 
-  <a class="skip" href="#cajon">Saltar al fichero</a>
+  <a class="skip" href="#inicio">Saltar al contenido</a>
 
-  <header class="front" id="arriba">
-    <div class="front__inner">
-      <a class="holder" href="#arriba" aria-label="Inicio">
-        <span class="holder__label" data-bind="label">Fichero</span>
+  <header class="nav">
+    <div class="nav__inner">
+      <a class="brand" href="#inicio" aria-label="Inicio">
+        <span class="brand__mark" data-bind="initials">··</span>
+        <span class="brand__name" data-bind="brand">Portfolio</span>
       </a>
-      <nav class="front__nav" aria-label="Secciones">
-        <a href="#cajon">Fichas</a>
-        <a href="#registro">Registro</a>
-        <a href="#prestamos">Préstamos</a>
-        <a href="#materias">Materias</a>
-        <a href="#visitas">Visitas</a>
-        <a class="front__cta" href="#solicitud">Solicitar</a>
+      <nav class="nav__links" aria-label="Secciones">
+        <a href="#proyectos">Proyectos</a>
+        <a href="#personaje">Personaje</a>
+        <a href="#temporadas">Temporadas</a>
+        <a href="#comentarios">Comentarios</a>
       </nav>
+      <a class="btn btn--sun nav__cta" href="#contacto">Contrátame</a>
     </div>
   </header>
 
-  <main>
-    <!-- EL CAJÓN -->
-    <section class="drawer" id="cajon" aria-labelledby="cajon-t">
-      <h1 class="visually-hidden" id="cajon-t" data-bind="h1">Portfolio</h1>
-      <div class="drawer__well">
-        <div class="tabs" role="tablist" aria-label="Fichas del cajón" data-tabs></div>
-        <div class="stage" data-stage aria-live="polite">
-          <article class="card card--loading" data-depth="0">
-            <div class="card__body">
-              <p class="typed loading-line">Abriendo el cajón<span class="caret"></span></p>
+  <main id="inicio">
+    <!-- HERO: carrusel de estrenos -->
+    <section class="hero" aria-roledescription="carrusel" aria-label="Destacados">
+      <div class="hero__slides" data-slides>
+        <div class="slide is-active slide--loading"><div class="slide__art"></div></div>
+      </div>
+      <div class="hero__thumbs" role="tablist" aria-label="Elegir destacado" data-thumbs></div>
+      <div class="hero__arrows">
+        <button class="round" type="button" data-prev aria-label="Anterior"><svg><use href="#i-left"/></svg></button>
+        <button class="round" type="button" data-next aria-label="Siguiente"><svg><use href="#i-right"/></svg></button>
+      </div>
+    </section>
+
+    <!-- TOP -->
+    <section class="row" id="proyectos" aria-labelledby="top-t">
+      <div class="row__head">
+        <h2 id="top-t">Top de la semana</h2>
+        <p>Ordenados por «me gusta» de quienes pasaron por aquí.</p>
+      </div>
+      <ol class="rail" data-top></ol>
+    </section>
+
+    <!-- CATÁLOGO -->
+    <section class="row" aria-labelledby="cat-t">
+      <div class="row__head row__head--split">
+        <h2 id="cat-t">Catálogo completo</h2>
+        <div class="chips" role="group" aria-label="Filtrar por género" data-filters></div>
+      </div>
+      <ul class="grid" data-grid></ul>
+    </section>
+
+    <!-- PERSONAJE -->
+    <section class="character" id="personaje" aria-labelledby="pj-t">
+      <div class="character__art" data-character-art aria-hidden="true"></div>
+      <div class="character__sheet">
+        <p class="kana" aria-hidden="true">キャラクター</p>
+        <h2 id="pj-t">Ficha de personaje</h2>
+        <dl class="specs" data-specs></dl>
+        <p class="character__bio" data-bio></p>
+        <h3 class="mini">Stats</h3>
+        <ul class="stats" data-stats></ul>
+        <h3 class="mini">Habilidades</h3>
+        <ul class="chips chips--static" data-abilities></ul>
+      </div>
+    </section>
+
+    <!-- TEMPORADAS -->
+    <section class="row" id="temporadas" aria-labelledby="temp-t">
+      <div class="row__head">
+        <h2 id="temp-t">Temporadas</h2>
+        <p>Mi experiencia, de la más reciente a la primera.</p>
+      </div>
+      <ol class="seasons" data-seasons></ol>
+    </section>
+
+    <!-- COMENTARIOS -->
+    <section class="row comments" id="comentarios" aria-labelledby="com-t">
+      <div class="row__head">
+        <h2 id="com-t">Comentarios</h2>
+        <p>Deja un saludo. Aparece al instante para todos los que visiten.</p>
+      </div>
+      <div class="comments__body">
+        <form class="composer" data-guest-form novalidate>
+          <div class="composer__avatar" data-composer-avatar aria-hidden="true">?</div>
+          <div class="composer__fields">
+            <label class="field">
+              <span class="field__label">Tu nombre</span>
+              <input name="name" maxlength="40" autocomplete="name" required>
+            </label>
+            <label class="field">
+              <span class="field__label">Comentario</span>
+              <textarea name="note" rows="2" maxlength="140" required></textarea>
+            </label>
+            <input class="trap" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+            <div class="composer__foot">
+              <p class="form-msg" data-guest-msg role="status"></p>
+              <button class="btn btn--pink" type="submit"><svg aria-hidden="true"><use href="#i-send"/></svg>Publicar</button>
             </div>
-          </article>
+          </div>
+        </form>
+        <ul class="thread" data-guestbook><li class="thread__empty">Cargando comentarios…</li></ul>
+      </div>
+    </section>
+
+    <!-- CONTACTO -->
+    <section class="contact" id="contacto" aria-labelledby="ct-t">
+      <div class="contact__art" data-contact-art aria-hidden="true"></div>
+      <div class="contact__inner">
+        <div class="contact__pitch">
+          <p class="kana kana--dark" aria-hidden="true">つづく</p>
+          <h2 id="ct-t">¿Siguiente episodio? Lo escribimos juntos.</h2>
+          <p>Proyectos, puestos o una pregunta rápida. Respondo en uno o dos días hábiles.</p>
+          <ul class="direct" data-direct></ul>
         </div>
-      </div>
-      <div class="drawer__controls">
-        <button class="flip" type="button" data-prev aria-label="Ficha anterior"><svg><use href="#i-left"/></svg></button>
-        <p class="drawer__hint"><span data-pos>—</span> · Toca una pestaña para sacar la ficha, o usa ← →</p>
-        <button class="flip" type="button" data-next aria-label="Ficha siguiente"><svg><use href="#i-right"/></svg></button>
-      </div>
-    </section>
-
-    <!-- REGISTRO -->
-    <section class="section" id="registro" aria-labelledby="registro-t">
-      <div class="section__head">
-        <h2 id="registro-t">Registro de adquisiciones</h2>
-        <p>Todo lo que entró al fichero, del más reciente al primero. Elige una línea para sacar su ficha.</p>
-      </div>
-      <div class="ledger">
-        <table>
-          <thead>
-            <tr><th scope="col">Nº</th><th scope="col">Signatura</th><th scope="col">Título</th><th scope="col">Materia</th><th scope="col" class="num">Año</th><th scope="col" class="num">Sellos</th></tr>
-          </thead>
-          <tbody data-ledger><tr><td colspan="6" class="ledger__empty">Cargando el registro…</td></tr></tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- PRÉSTAMOS / EXPERIENCIA -->
-    <section class="section section--split" id="prestamos" aria-labelledby="prestamos-t">
-      <div class="section__head">
-        <h2 id="prestamos-t">Préstamos</h2>
-        <p>Dónde he trabajado. Cada sello es una fecha de entrada o de devolución.</p>
-      </div>
-      <div class="slip">
-        <div class="slip__top">
-          <span>Biblioteca de trabajo</span>
-          <span>Devolver antes de la última fecha sellada</span>
-        </div>
-        <ol class="slip__rows" data-experience><li class="slip__row slip__row--empty">Cargando…</li></ol>
-      </div>
-    </section>
-
-    <!-- MATERIAS / SKILLS -->
-    <section class="section" id="materias" aria-labelledby="materias-t">
-      <div class="section__head">
-        <h2 id="materias-t">Encabezamientos de materia</h2>
-        <p>Lo que sé hacer, ordenado como lo ordenaría una bibliotecaria. Los «véase también» te llevan de un cajón a otro.</p>
-      </div>
-      <div class="cabinet" data-skills></div>
-    </section>
-
-    <!-- LIBRO DE VISITAS -->
-    <section class="section section--split" id="visitas" aria-labelledby="visitas-t">
-      <div class="section__head">
-        <h2 id="visitas-t">Tarjeta de circulación</h2>
-        <p>Quien pasa por el fichero deja su firma. Escribe una línea; aparece al instante.</p>
-      </div>
-      <div class="circ">
-        <div class="circ__head">
-          <span>Fichero</span><span data-bind="call">005.276</span>
-        </div>
-        <table class="circ__table">
-          <thead><tr><th scope="col">Fecha</th><th scope="col">Nombre</th><th scope="col">Nota</th></tr></thead>
-          <tbody data-guestbook><tr><td colspan="3">Cargando firmas…</td></tr></tbody>
-        </table>
-        <form class="circ__form" data-guest-form novalidate>
-          <span class="circ__date" data-today aria-hidden="true"></span>
-          <label class="field">
-            <span class="visually-hidden">Tu nombre</span>
-            <input name="name" maxlength="40" autocomplete="name" placeholder="Tu nombre" required>
-          </label>
-          <label class="field field--grow">
-            <span class="visually-hidden">Tu nota</span>
-            <input name="note" maxlength="140" placeholder="Una línea para el fichero" required>
-          </label>
+        <form class="panel" data-contact-form novalidate>
+          <label class="field"><span class="field__label">Nombre</span><input name="name" maxlength="80" autocomplete="name" required></label>
+          <label class="field"><span class="field__label">Correo</span><input name="email" type="email" maxlength="120" autocomplete="email" required></label>
+          <label class="field"><span class="field__label">Asunto</span><input name="subject" maxlength="120" placeholder="Proyecto, empleo, consulta…"></label>
+          <label class="field"><span class="field__label">Mensaje</span><textarea name="body" rows="5" maxlength="4000" required></textarea></label>
           <input class="trap" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-          <button class="btn btn--ink" type="submit">Firmar</button>
-          <p class="form-msg" data-guest-msg role="status"></p>
+          <div class="panel__foot">
+            <p class="form-msg" data-contact-msg role="status"></p>
+            <button class="btn btn--pink btn--lg" type="submit"><svg aria-hidden="true"><use href="#i-send"/></svg>Enviar mensaje</button>
+          </div>
         </form>
       </div>
-    </section>
-
-    <!-- SOLICITUD / CONTACTO -->
-    <section class="section request" id="solicitud" aria-labelledby="solicitud-t">
-      <div class="section__head">
-        <h2 id="solicitud-t">Papeleta de solicitud</h2>
-        <p>¿Un proyecto, un puesto o una pregunta? Llena la papeleta y la recibo en el mostrador. Contesto en uno o dos días hábiles.</p>
-        <ul class="direct" data-direct></ul>
-      </div>
-      <form class="callslip" data-contact-form novalidate>
-        <div class="callslip__top">
-          <span>Papeleta Nº <b data-folio>····</b></span>
-          <span data-today></span>
-        </div>
-        <label class="blank">
-          <span>Solicitante</span>
-          <input name="name" maxlength="80" autocomplete="name" required>
-        </label>
-        <label class="blank">
-          <span>Correo</span>
-          <input name="email" type="email" maxlength="120" autocomplete="email" required>
-        </label>
-        <label class="blank">
-          <span>Asunto</span>
-          <input name="subject" maxlength="120" placeholder="Proyecto, empleo, consulta…">
-        </label>
-        <label class="blank blank--area">
-          <span>Lo que necesitas</span>
-          <textarea name="body" rows="5" maxlength="4000" required></textarea>
-        </label>
-        <input class="trap" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-        <div class="callslip__foot">
-          <p class="form-msg" data-contact-msg role="status"></p>
-          <button class="btn btn--salmon" type="submit">Entregar papeleta</button>
-        </div>
-        <div class="received" data-received aria-hidden="true"></div>
-      </form>
     </section>
   </main>
 
   <footer class="foot">
-    <p>Fin del cajón · <span data-count>—</span> fichas</p>
-    <p class="foot__small">Hecho a mano con HTML, CSS, JavaScript, Express y SQLite. <a href="/admin">Mostrador</a></p>
+    <p class="foot__end" aria-hidden="true">おわり</p>
+    <p>Hecho a mano con HTML, CSS, JavaScript, Express y SQLite · <span data-count>—</span> proyectos</p>
+    <p class="foot__small"><a href="/admin">Panel</a></p>
   </footer>
 
+  <!-- detalle de proyecto -->
+  <dialog class="detail" data-detail aria-labelledby="detail-t">
+    <div class="detail__art" data-detail-art></div>
+    <button class="round detail__close" type="button" data-close aria-label="Cerrar"><svg><use href="#i-close"/></svg></button>
+    <div class="detail__body" data-detail-body></div>
+  </dialog>
+
+  <div class="toast" role="status" data-toast></div>
+
+  <script src="/js/art.js" defer></script>
   <script src="/js/app.js" defer></script>
 </body>
 </html>
