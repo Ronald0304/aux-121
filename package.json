@@ -1,0 +1,29 @@
+{
+  "name": "fichero-portfolio",
+  "version": "1.0.0",
+  "description": "Portfolio full-stack: HTML, CSS, JS, Express y SQLite",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "seed": "node db/seed.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ronald0304/aux-121.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ronald0304/aux-121/issues"
+  },
+  "homepage": "https://github.com/Ronald0304/aux-121#readme",
+  "dependencies": {
+    "better-sqlite3": "^13.2.0",
+    "express": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fichero · Portfolio full-stack</title>
+  <meta name="description" content="Portfolio de un desarrollador full-stack, organizado como un fichero de biblioteca que funciona: proyectos, experiencia, habilidades y contacto.">
+  <meta name="theme-color" content="#1e4d3c">
+  <link rel="preload" href="/fonts/archivo-latin-standard-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/courier-prime-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%231e4d3c'/%3E%3Crect x='6' y='9' width='20' height='15' rx='1' fill='%23fdfdfa'/%3E%3Crect x='6' y='11' width='20' height='1.4' fill='%23d94a3d'/%3E%3Crect x='9' y='5' width='7' height='5' rx='1' fill='%23e6b53d'/%3E%3Ccircle cx='16' cy='21' r='1.6' fill='%231e4d3c'/%3E%3C/svg%3E">
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <filter id="ink" x="-10%" y="-20%" width="120%" height="140%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="n"/>
+        <feDisplacementMap in="SourceGraphic" in2="n" scale="1.6" result="d"/>
+        <feComponentTransfer in="n" result="speck"><feFuncA type="discrete" tableValues="1 1 1 0.15 1 1 1 1"/></feComponentTransfer>
+        <feComposite in="d" in2="speck" operator="in"/>
+      </filter>
+      <symbol id="i-stamp" viewBox="0 0 24 24"><path d="M9 3.5h6v4.2c0 1.2.6 2 1.6 2.6l.9.5c.9.5 1.5 1.5 1.5 2.6V15H5v-1.6c0-1.1.6-2.1 1.5-2.6l.9-.5c1-.6 1.6-1.4 1.6-2.6z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 18.5h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+      <symbol id="i-left" viewBox="0 0 24 24"><path d="M14.5 6 8.5 12l6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-right" viewBox="0 0 24 24"><path d="m9.5 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+      <symbol id="i-out" viewBox="0 0 24 24"><path d="M10 5H6.5A1.5 1.5 0 0 0 5 6.5v11A1.5 1.5 0 0 0 6.5 19h11a1.5 1.5 0 0 0 1.5-1.5V14M13 5h6v6M19 5l-8 8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    </defs>
+  </svg>
+
+  <a class="skip" href="#cajon">Saltar al fichero</a>
+
+  <header class="front" id="arriba">
+    <div class="front__inner">
+      <a class="holder" href="#arriba" aria-label="Inicio">
+        <span class="holder__label" data-bind="label">Fichero</span>
+      </a>
+      <nav class="front__nav" aria-label="Secciones">
+        <a href="#cajon">Fichas</a>
+        <a href="#registro">Registro</a>
+        <a href="#prestamos">Préstamos</a>
+        <a href="#materias">Materias</a>
+        <a href="#visitas">Visitas</a>
+        <a class="front__cta" href="#solicitud">Solicitar</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- EL CAJÓN -->
+    <section class="drawer" id="cajon" aria-labelledby="cajon-t">
+      <h1 class="visually-hidden" id="cajon-t" data-bind="h1">Portfolio</h1>
+      <div class="drawer__well">
+        <div class="tabs" role="tablist" aria-label="Fichas del cajón" data-tabs></div>
+        <div class="stage" data-stage aria-live="polite">
+          <article class="card card--loading" data-depth="0">
+            <div class="card__body">
+              <p class="typed loading-line">Abriendo el cajón<span class="caret"></span></p>
+            </div>
+          </article>
+        </div>
+      </div>
+      <div class="drawer__controls">
+        <button class="flip" type="button" data-prev aria-label="Ficha anterior"><svg><use href="#i-left"/></svg></button>
+        <p class="drawer__hint"><span data-pos>—</span> · Toca una pestaña para sacar la ficha, o usa ← →</p>
+        <button class="flip" type="button" data-next aria-label="Ficha siguiente"><svg><use href="#i-right"/></svg></button>
+      </div>
+    </section>
+
+    <!-- REGISTRO -->
+    <section class="section" id="registro" aria-labelledby="registro-t">
+      <div class="section__head">
+        <h2 id="registro-t">Registro de adquisiciones</h2>
+        <p>Todo lo que entró al fichero, del más reciente al primero. Elige una línea para sacar su ficha.</p>
+      </div>
+      <div class="ledger">
+        <table>
+          <thead>
+            <tr><th scope="col">Nº</th><th scope="col">Signatura</th><th scope="col">Título</th><th scope="col">Materia</th><th scope="col" class="num">Año</th><th scope="col" class="num">Sellos</th></tr>
+          </thead>
+          <tbody data-ledger><tr><td colspan="6" class="ledger__empty">Cargando el registro…</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- PRÉSTAMOS / EXPERIENCIA -->
+    <section class="section section--split" id="prestamos" aria-labelledby="prestamos-t">
+      <div class="section__head">
+        <h2 id="prestamos-t">Préstamos</h2>
+        <p>Dónde he trabajado. Cada sello es una fecha de entrada o de devolución.</p>
+      </div>
+      <div class="slip">
+        <div class="slip__top">
+          <span>Biblioteca de trabajo</span>
+          <span>Devolver antes de la última fecha sellada</span>
+        </div>
+        <ol class="slip__rows" data-experience><li class="slip__row slip__row--empty">Cargando…</li></ol>
+      </div>
+    </section>
+
+    <!-- MATERIAS / SKILLS -->
+    <section class="section" id="materias" aria-labelledby="materias-t">
+      <div class="section__head">
+        <h2 id="materias-t">Encabezamientos de materia</h2>
+        <p>Lo que sé hacer, ordenado como lo ordenaría una bibliotecaria. Los «véase también» te llevan de un cajón a otro.</p>
+      </div>
+      <div class="cabinet" data-skills></div>
+    </section>
+
+    <!-- LIBRO DE VISITAS -->
+    <section class="section section--split" id="visitas" aria-labelledby="visitas-t">
+      <div class="section__head">
+        <h2 id="visitas-t">Tarjeta de circulación</h2>
+        <p>Quien pasa por el fichero deja su firma. Escribe una línea; aparece al instante.</p>
+      </div>
+      <div class="circ">
+        <div class="circ__head">
+          <span>Fichero</span><span data-bind="call">005.276</span>
+        </div>
+        <table class="circ__table">
+          <thead><tr><th scope="col">Fecha</th><th scope="col">Nombre</th><th scope="col">Nota</th></tr></thead>
+          <tbody data-guestbook><tr><td colspan="3">Cargando firmas…</td></tr></tbody>
+        </table>
+        <form class="circ__form" data-guest-form novalidate>
+          <span class="circ__date" data-today aria-hidden="true"></span>
+          <label class="field">
+            <span class="visually-hidden">Tu nombre</span>
+            <input name="name" maxlength="40" autocomplete="name" placeholder="Tu nombre" required>
+          </label>
+          <label class="field field--grow">
+            <span class="visually-hidden">Tu nota</span>
+            <input name="note" maxlength="140" placeholder="Una línea para el fichero" required>
+          </label>
+          <input class="trap" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <button class="btn btn--ink" type="submit">Firmar</button>
+          <p class="form-msg" data-guest-msg role="status"></p>
+        </form>
+      </div>
+    </section>
+
+    <!-- SOLICITUD / CONTACTO -->
+    <section class="section request" id="solicitud" aria-labelledby="solicitud-t">
+      <div class="section__head">
+        <h2 id="solicitud-t">Papeleta de solicitud</h2>
+        <p>¿Un proyecto, un puesto o una pregunta? Llena la papeleta y la recibo en el mostrador. Contesto en uno o dos días hábiles.</p>
+        <ul class="direct" data-direct></ul>
+      </div>
+      <form class="callslip" data-contact-form novalidate>
+        <div class="callslip__top">
+          <span>Papeleta Nº <b data-folio>····</b></span>
+          <span data-today></span>
+        </div>
+        <label class="blank">
+          <span>Solicitante</span>
+          <input name="name" maxlength="80" autocomplete="name" required>
+        </label>
+        <label class="blank">
+          <span>Correo</span>
+          <input name="email" type="email" maxlength="120" autocomplete="email" required>
+        </label>
+        <label class="blank">
+          <span>Asunto</span>
+          <input name="subject" maxlength="120" placeholder="Proyecto, empleo, consulta…">
+        </label>
+        <label class="blank blank--area">
+          <span>Lo que necesitas</span>
+          <textarea name="body" rows="5" maxlength="4000" required></textarea>
+        </label>
+        <input class="trap" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div class="callslip__foot">
+          <p class="form-msg" data-contact-msg role="status"></p>
+          <button class="btn btn--salmon" type="submit">Entregar papeleta</button>
+        </div>
+        <div class="received" data-received aria-hidden="true"></div>
+      </form>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>Fin del cajón · <span data-count>—</span> fichas</p>
+    <p class="foot__small">Hecho a mano con HTML, CSS, JavaScript, Express y SQLite. <a href="/admin">Mostrador</a></p>
+  </footer>
+
+  <script src="/js/app.js" defer></script>
+</body>
+</html>
