@@ -4,3 +4,4 @@ db/*.sqlite-*
 .impeccable/review/
 .impeccable/questions/
 .impeccable/mocks/
+*.zip
